@@ -1,0 +1,14 @@
+{
+    "name": "pxt-Smarthouse",
+    "version": "1.0",
+    "description": "This is the extension for Smarthouse in PXT",
+    "license": "MIT",
+    "dependencies": {
+        "core": "*"		
+    },
+    "files": [
+        "README.md",
+        "Smarthouse.ts"
+    ],
+    "public": true
+}
