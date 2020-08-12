@@ -15,6 +15,7 @@ namespace House {
         anticlockwise
     }
 
+
     export enum ServoSpeed {
         //% blockId=servo360_level_0
         //% block="Stop"
@@ -63,8 +64,8 @@ namespace House {
     //% weight=80	
     //% blockGap=7	
 
-    export function getLight(pin:AnalogPin): number {
-       light_variable= pins.analogReadPin(pin)
+    export function getLight(pin: AnalogPin): number {
+        light_variable = pins.analogReadPin(pin)
         return light_variable;
     }
 
@@ -73,8 +74,31 @@ namespace House {
     //% weight=79
     //% blockGap=7	
 
-    export function getTemperature(pin:AnalogPin): number {
-        temperature_variable= pins.analogReadPin(pin)
+    export function getTemperature(pin: DigitalPin): number {
+
+        pins.digitalWritePin(pin, 0)
+        basic.pause(18)
+        let i = pins.digitalReadPin(pin)
+        pins.setPull(pin, PinPullMode.PullUp);
+        let dhtvalue1 = 0;
+        let dhtcounter1 = 0;
+        while (pins.digitalReadPin(pin) == 1);
+        while (pins.digitalReadPin(pin) == 0);
+        while (pins.digitalReadPin(pin) == 1);
+        for (let i = 0; i <= 32 - 1; i++) {
+            while (pins.digitalReadPin(pin) == 0);
+            dhtcounter1 = 0
+            while (pins.digitalReadPin(pin) == 1) {
+                dhtcounter1 += 1;
+            }
+            if (i > 15) {
+                if (dhtcounter1 > 2) {
+                    dhtvalue1 = dhtvalue1 + (1 << (31 - i));
+                }
+            }
+        }
+        temperature_variable = ((dhtvalue1 & 0x0000ff00) >> 8);
+        basic.pause(500)
         return temperature_variable;
     }
 
@@ -84,8 +108,30 @@ namespace House {
     //% weight=78	
     //% blockGap=7	
 
-    export function getHumidity(pin:AnalogPin): number {
-       humidity_variable= pins.analogReadPin(pin)
+    export function getHumidity(pin: DigitalPin): number {
+        pins.digitalWritePin(pin, 0)
+        basic.pause(18)
+        let i = pins.digitalReadPin(pin)
+        pins.setPull(pin, PinPullMode.PullUp);
+        while (pins.digitalReadPin(pin) == 1);
+        while (pins.digitalReadPin(pin) == 0);
+        while (pins.digitalReadPin(pin) == 1);
+
+        let value = 0;
+        let counter = 0;
+
+        for (let i = 0; i <= 8 - 1; i++) {
+            while (pins.digitalReadPin(pin) == 0);
+            counter = 0
+            while (pins.digitalReadPin(pin) == 1) {
+                counter += 1;
+            }
+            if (counter > 3) {
+                value = value + (1 << (7 - i));
+            }
+        }
+        humidity_variable = value;
+        basic.pause(500)
         return humidity_variable;
     }
 
@@ -94,8 +140,10 @@ namespace House {
     //% weight=77	
     //% blockGap=7	
 
-    export function getHeat(pin:AnalogPin): number {
-        heat_variable= pins.analogReadPin(pin)
+    export function getHeat(pin: DigitalPin): number {
+        let T = getTemperature(pin);
+        let H = getHumidity(pin);
+        heat_variable = -43.379 + 2.09401523 * T + 10.14333127 * H + -0.22475541 * T * H + -6.3783 * 0.001 * T * T + -5.481717 * 0.01 * H * H + 1.22874 * 0.001 * T * T * H + 8.5282 * 0.0001 * T * H * H + -1.99 * 0.000001 * T * T * H * H;
         return heat_variable;
     }
 
@@ -104,7 +152,7 @@ namespace House {
     //% weight=76	
     //% blockGap=7	
 
-    export function getButton(pin:AnalogPin): number {
+    export function getButton(pin: AnalogPin): number {
         button_variable = pins.analogReadPin(pin);
         return button_variable;
     }
@@ -115,7 +163,7 @@ namespace House {
     //% weight=75	
     //% blockGap=7	
 
-    export function getMotion(pin:AnalogPin): number {
+    export function getMotion(pin: AnalogPin): number {
         motion_variable = pins.analogReadPin(pin);
         return motion_variable;
     }
@@ -125,7 +173,7 @@ namespace House {
     //% weight=74	
     //% blockGap=7	
 
-    export function getFlame(pin:AnalogPin): number {
+    export function getFlame(pin: AnalogPin): number {
         flame_variable = pins.analogReadPin(pin)
         return flame_variable;
     }
@@ -133,7 +181,7 @@ namespace House {
     //% block="Get town gas value (intensity) at %pin"
     //% weight=73
 
-    export function getTownGas(pin:AnalogPin): number {
+    export function getTownGas(pin: AnalogPin): number {
         towngas_variable = pins.analogReadPin(pin);
         return towngas_variable;
 
@@ -165,115 +213,114 @@ namespace House {
     }
 
     //% blockId="smarthon_red_LED"
-    //% block="Set Red LED to intensity %intensity"
+    //% block="Set Red LED to intensity %intensity at %pin"
     //% intensity.min=0 intensity.max=1023
     //% weight=49
     //%subcategory=More
     //% blockGap=7	
 
-    export function TurnRedLED(intensity: number): void {
+    export function TurnRedLED(intensity: number, pin: AnalogPin): void {
 
-        pins.analogWritePin(AnalogPin.P0, intensity);
+        pins.analogWritePin(pin, intensity);
     }
 
     //% blockId="smarthon_green_LED"
-    //% block="Set Green LED to intensity %intensity"
+    //% block="Set Green LED to intensity %intensity at %pin"
     //% intensity.min=0 intensity.max=1023
     //% weight=48
     //%subcategory=More
     //% blockGap=7	
 
-    export function TurnGreenLED(intensity: number): void {
+    export function TurnGreenLED(intensity: number, pin: AnalogPin): void {
 
-        pins.analogWritePin(AnalogPin.P1, intensity);
+        pins.analogWritePin(pin, intensity);
     }
 
     //% blockId="smarthon_yellow_LED"
-    //% block="Set Yellow LED to intensity %intensity"
+    //% block="Set Yellow LED to intensity %intensity at %pin"
     //% intensity.min=0 intensity.max=1023
     //% weight=47
     //%subcategory=More
     //% blockGap=7	
 
 
-    export function TurnYellowLED(intensity: number): void {
+    export function TurnYellowLED(intensity: number, pin: AnalogPin): void {
 
-        pins.analogWritePin(AnalogPin.P2, intensity);
+        pins.analogWritePin(pin, intensity);
     }
 
 
     //% blockId="smarthon_buzzer"
-    //% block="Set Buzzer to intensity %intensity"
+    //% block="Set Buzzer to intensity %intensity at %pin"
     //% intensity.min=0 intensity.max=1023
     //% weight=46
     //%subcategory=More	
 
-    export function TurnBuzzer(intensity: number): void {
+    export function TurnBuzzer(intensity: number, pin: AnalogPin): void {
 
-        pins.analogWritePin(AnalogPin.P14, intensity);
+        pins.analogWritePin(pin, intensity);
     }
 
     //% blockId="smarthon_motorfan_cw"
-    //% block="Set Motor fan clockwisely to intensity %intensity"
+    //% block="Set Motor fan clockwisely to intensity %intensity at %pin"
     //% intensity.min=0 intensity.max=1023
     //% weight=45	
     //%subcategory=More
     //% blockGap=7	
 
-    export function TurnMotorCW(intensity: number): void {
-
-        pins.analogWritePin(AnalogPin.P13, intensity);
+    export function TurnMotorCW(intensity: number, pin: AnalogPin): void {
+        pins.analogWritePin(pin, intensity);
     }
 
 
     //% blockId="smarthon_motorfan_acw"
-    //% block="Set Motor fan anti-clockwisely to intensity %intensity"
+    //% block="Set Motor fan anti-clockwisely to intensity %intensity at %pin"
     //% intensity.min=0 intensity.max=1023
     //% weight=44
     //%subcategory=More
     //% blockGap=7	
 
-    export function TurnMotorACW(intensity: number): void {
+    export function TurnMotorACW(intensity: number, pin: AnalogPin): void {
 
-        pins.analogWritePin(AnalogPin.P0, intensity);
+        pins.analogWritePin(pin, intensity);
     }
 
 
     //% blockId="smarthon_180_servo"
-    //% block="Set 180° Servo to degree %degree"
+    //% block="Set 180° Servo to degree %degree at %pin"
     //% intensity.min=0 intensity.max=180
     //% weight=43
     //%subcategory=More
     //% blockGap=7	
 
-    export function Turn180Servo(intensity: number): void {
+    export function Turn180Servo(intensity: number, pin: AnalogPin): void {
 
-        pins.servoWritePin(AnalogPin.P15, intensity)
+        pins.servoWritePin(pin, intensity)
     }
 
 
     //% blockId="smarthon_360_servo"
-    //% block="Set 360° Servo to direction %direction|speed %speed"
+    //% block="Set 360° Servo to direction %direction|speed %speed at %pin"
     //% weight=42
     //%subcategory=More
 
-    export function Turn360Servo(direction: ServoDirection, speed: ServoSpeed): void {
+    export function Turn360Servo(direction: ServoDirection, speed: ServoSpeed, pin: AnalogPin): void {
 
         switch (direction) {
 
             case ServoDirection.clockwise:
                 switch (speed) {
                     case ServoSpeed.level0:
-                        pins.servoWritePin(AnalogPin.P16, 90)
+                        pins.servoWritePin(pin, 90)
                         break
                     case ServoSpeed.level1:
-                        pins.servoWritePin(AnalogPin.P16, 83)
+                        pins.servoWritePin(pin, 83)
                         break
                     case ServoSpeed.level2:
-                        pins.servoWritePin(AnalogPin.P16, 82)
+                        pins.servoWritePin(pin, 82)
                         break
                     case ServoSpeed.level3:
-                        pins.servoWritePin(AnalogPin.P16, 80)
+                        pins.servoWritePin(pin, 80)
                         break
                 }
                 break
@@ -281,16 +328,16 @@ namespace House {
             case ServoDirection.anticlockwise:
                 switch (speed) {
                     case ServoSpeed.level0:
-                        pins.servoWritePin(AnalogPin.P16, 90)
+                        pins.servoWritePin(pin, 90)
                         break
                     case ServoSpeed.level1:
-                        pins.servoWritePin(AnalogPin.P16, 96)
+                        pins.servoWritePin(pin, 96)
                         break
                     case ServoSpeed.level2:
-                        pins.servoWritePin(AnalogPin.P16, 97)
+                        pins.servoWritePin(pin, 97)
                         break
                     case ServoSpeed.level3:
-                        pins.servoWritePin(AnalogPin.P16, 98)
+                        pins.servoWritePin(pin, 98)
                         break
                 }
                 break
