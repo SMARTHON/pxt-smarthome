@@ -35,32 +35,13 @@ namespace House {
         level3 = 3
     }
 
-    export enum GeneralSensorPort {
-        //% block="A1"
-        a1,
-        //% block="A2"
-        a2,
-        //% block="A3"
-        a3,
-        //% block="A6"
-        a6,
-        //% block="A7"
-        a7
-    }
-
-    export enum GeneralActuatorPort {
-        //% block="P0"
-        p0,
-        //% block="P1"
-        p1,
-        //% block="P2"
-        p2,
-        //% block="P13"
-        p13,
-        //% block="P15"
-        p15,
-        //% block="P16"
-        p16
+    export enum DistanceUnit {
+        //% block="cm"
+        Centimeters,
+        //% block="inches"
+        Inches,
+        //% block="μs"
+        MicroSeconds
     }
 
     //% blockId="smarthon_get_light_house" 
@@ -143,6 +124,7 @@ namespace House {
     //% block="Get heat (index) at %pin"
     //% weight=77	
     //% blockGap=7	
+	//% blockHidden=true
 
     export function getHeat(pin: DigitalPin): number {
         let T = getTemperature(pin);
@@ -151,15 +133,6 @@ namespace House {
         return heat_variable;
     }
 
-    //% blockId="smarthon_get_button" 
-    //% block="Get button (pressed or not) at %pin"
-    //% weight=76	
-    //% blockGap=7	
-
-    export function getButton(pin: AnalogPin): number {
-        button_variable = pins.analogReadPin(pin);
-        return button_variable;
-    }
 
 
     //% blockId="smarthon_get_motion" 
@@ -191,30 +164,45 @@ namespace House {
 
     }
 
-    //% blockId="smarthon_get_generalsensor" 
-    //% block="Get general sensor value port %port"
-    //% weight=72
-    //% blockGap=7	
+    //% blockId=read_distance_sensor
+    //% block="Get distance with unit %unit|trig %trig|echo %echo"
+    //% weight=70
+    //% trig.defl=DigitalPin.P14 echo.defl=DigitalPin.P15
+    export function read_distance_sensor(unit: DistanceUnit, trig: DigitalPin, echo: DigitalPin, maxCmDistance = 500): number {
+        // send pulse
+        let d = 10;
+        pins.setPull(trig, PinPullMode.PullNone);
+        for (let x = 0; x < 10; x++) {
+            pins.digitalWritePin(trig, 0);
+            control.waitMicros(2);
+            pins.digitalWritePin(trig, 1);
+            control.waitMicros(10);
+            pins.digitalWritePin(trig, 0);
+            // read pulse
+            d = pins.pulseIn(echo, PulseValue.High, maxCmDistance * 58);
+            if (d > 0)
+                break;
+        }
 
-    export function getGeneralSensor(port: GeneralSensorPort): number {
-        switch (port) {
-            case GeneralSensorPort.a1:
-                return light_variable;
-                break
-            case GeneralSensorPort.a2:
-                return button_variable;
-                break
-            case GeneralSensorPort.a3:
-                return motion_variable;
-                break
-            case GeneralSensorPort.a6:
-                return flame_variable;
-                break
-            case GeneralSensorPort.a7:
-                return towngas_variable;
-                break
+        switch (unit) {
+            case DistanceUnit.Centimeters: return Math.round(d / 58 * 1.4);
+            case DistanceUnit.Inches: return Math.round(d / 148 * 1.4);
+            default: return d;
         }
     }
+	
+	//% blockId="smarthon_colorful_led"
+    //% block="Set Colorful LED to intensity %intensity at %pin"
+    //% intensity.min=0 intensity.max=1023
+    //% pin.defl=AnalogPin.P0
+    //% weight=50
+    //%subcategory=More
+    //% blockGap=7
+    export function TurnColorfulLED(intensity: number, pin: AnalogPin): void {
+
+        pins.analogWritePin(pin, intensity);
+    }
+
 
     //% blockId="smarthon_red_LED"
     //% block="Set Red LED to intensity %intensity at %pin"
@@ -265,29 +253,29 @@ namespace House {
         pins.analogWritePin(pin, intensity);
     }
 
-    //% blockId="smarthon_motorfan_cw"
-    //% block="Set Motor fan clockwisely to intensity %intensity at %pin"
-    //% intensity.min=0 intensity.max=1023
+   //% blockId="smarthon_motorfan"
+    //% block="Set Motor fan to intensity %intensity at S1 %pin1 S2 %pin2"
+    //% intensity.min=-1023 intensity.max=1023
+    //% pin1.defl=AnalogPin.P14 pin2.defl=AnalogPin.P15
     //% weight=45	
     //%subcategory=More
     //% blockGap=7	
 
-    export function TurnMotorCW(intensity: number, pin: AnalogPin): void {
-        pins.analogWritePin(pin, intensity);
+    export function TurnMotorCW(intensity: number, pin1: AnalogPin, pin2: AnalogPin): void {
+        if (intensity > 0) {
+            pins.analogWritePin(pin1, intensity);
+            pins.analogWritePin(pin2, 0);
+        }
+        else if (intensity < 0) {
+            pins.analogWritePin(pin1, 0);
+            pins.analogWritePin(pin2, intensity);
+        }
+        else {
+            pins.analogWritePin(pin1, 0);
+            pins.analogWritePin(pin2, 0);
+        }
     }
 
-
-    //% blockId="smarthon_motorfan_acw"
-    //% block="Set Motor fan anti-clockwisely to intensity %intensity at %pin"
-    //% intensity.min=0 intensity.max=1023
-    //% weight=44
-    //%subcategory=More
-    //% blockGap=7	
-
-    export function TurnMotorACW(intensity: number, pin: AnalogPin): void {
-
-        pins.analogWritePin(pin, intensity);
-    }
 
 
     //% blockId="smarthon_180_servo"
@@ -348,34 +336,7 @@ namespace House {
         }
     }
 
-    //% blockId="smarthon_house_general_output"
-    //% block="Set general output port %port|intensity %intensity"
-    //% intensity.min=0 intensity.max=1023
-    //% weight=41
-    //%subcategory=More
-
-    export function TurnGeneralOutput(port: GeneralActuatorPort, intensity: number): void {
-        switch (port) {
-            case GeneralActuatorPort.p0:
-                pins.analogWritePin(AnalogPin.P0, intensity);
-                break
-            case GeneralActuatorPort.p1:
-                pins.analogWritePin(AnalogPin.P1, intensity);
-                break
-            case GeneralActuatorPort.p2:
-                pins.analogWritePin(AnalogPin.P2, intensity);
-                break
-            case GeneralActuatorPort.p13:
-                pins.analogWritePin(AnalogPin.P13, intensity);
-                break
-            case GeneralActuatorPort.p15:
-                pins.analogWritePin(AnalogPin.P15, intensity);
-                break
-            case GeneralActuatorPort.p16:
-                pins.analogWritePin(AnalogPin.P16, intensity);
-                break
-        }
-    }
+    
 
 
 
