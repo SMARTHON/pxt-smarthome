@@ -12,6 +12,12 @@ namespace House {
     let flame_variable = 0
     let towngas_variable = 0
 
+	let temp = 0
+	let temp_pin=0
+	let _temperature: number = -999.0
+    let _humidity: number = -999.0
+    let _readSuccessful: boolean = false
+	
     export enum ServoDirection {
         //% block="clockwise"
         clockwise,
@@ -19,7 +25,13 @@ namespace House {
         anticlockwise
     }
 
-
+	export enum DHT11dataType {
+    //% block="temperature"
+    temperature,
+	//% block="humidity"
+    humidity
+	}
+	
     export enum ServoSpeed {
         //% blockId=servo360_level_0
         //% block="Stop"
@@ -54,6 +66,72 @@ namespace House {
         return light_variable;
     }
 
+	
+	//% block="Get DHT11 at pin %dataPin|"
+    function dht11_queryData( dataPin: DigitalPin) {
+
+        //initialize
+        let startTime: number = 0
+        let endTime: number = 0
+        let checksum: number = 0
+        let checksumTmp: number = 0
+        let dataArray: boolean[] = []
+        let resultArray: number[] = []
+        for (let index = 0; index < 40; index++) dataArray.push(false)
+        for (let index = 0; index < 5; index++) resultArray.push(0)
+        _humidity = -999.0
+        _temperature = -999.0
+        _readSuccessful = false
+
+        startTime = input.runningTimeMicros()
+
+        //request data
+        pins.digitalWritePin(dataPin, 0) //begin protocol
+        basic.pause(18)
+        //if (pullUp) pins.setPull(dataPin, PinPullMode.PullUp) //pull up data pin if needed
+        pins.digitalReadPin(dataPin)
+        control.waitMicros(20)
+        while (pins.digitalReadPin(dataPin) == 1);
+        while (pins.digitalReadPin(dataPin) == 0); //sensor response
+        while (pins.digitalReadPin(dataPin) == 1); //sensor response
+
+        //read data (5 bytes)
+        for (let index = 0; index < 40; index++) {
+            while (pins.digitalReadPin(dataPin) == 1);
+            while (pins.digitalReadPin(dataPin) == 0);
+            control.waitMicros(28)
+            //if sensor pull up data pin for more than 28 us it means 1, otherwise 0
+            if (pins.digitalReadPin(dataPin) == 1) dataArray[index] = true
+        }
+
+        endTime = input.runningTimeMicros()
+
+        //convert byte number array to integer
+        for (let index = 0; index < 5; index++)
+            for (let index2 = 0; index2 < 8; index2++)
+                if (dataArray[8 * index + index2]) resultArray[index] += 2 ** (7 - index2)
+
+        //verify checksum
+        checksumTmp = resultArray[0] + resultArray[1] + resultArray[2] + resultArray[3]
+        checksum = resultArray[4]
+        if (checksumTmp >= 512) checksumTmp -= 512
+        if (checksumTmp >= 256) checksumTmp -= 256
+        if (checksum == checksumTmp) _readSuccessful = true
+
+        //read data if checksum ok
+        if (_readSuccessful) {
+            
+                //DHT11
+                _humidity = resultArray[0] + resultArray[1] / 100
+                _temperature = resultArray[2] + resultArray[3] / 100
+            
+        }
+
+        //wait 2 sec after query 
+        basic.pause(2000)
+
+    }
+	
     //% blockId="smarthon_get_temperature_house" 
     //% block="Get temperature (°C) at %pin"
     //% weight=79
@@ -61,30 +139,8 @@ namespace House {
 
     export function getTemperature(pin: DigitalPin): number {
 
-        pins.digitalWritePin(pin, 0)
-        basic.pause(18)
-        let i = pins.digitalReadPin(pin)
-        pins.setPull(pin, PinPullMode.PullUp);
-        let dhtvalue1 = 0;
-        let dhtcounter1 = 0;
-        while (pins.digitalReadPin(pin) == 1);
-        while (pins.digitalReadPin(pin) == 0);
-        while (pins.digitalReadPin(pin) == 1);
-        for (let i = 0; i <= 32 - 1; i++) {
-            while (pins.digitalReadPin(pin) == 0);
-            dhtcounter1 = 0
-            while (pins.digitalReadPin(pin) == 1) {
-                dhtcounter1 += 1;
-            }
-            if (i > 15) {
-                if (dhtcounter1 > 2) {
-                    dhtvalue1 = dhtvalue1 + (1 << (31 - i));
-                }
-            }
-        }
-        temperature_variable = ((dhtvalue1 & 0x0000ff00) >> 8);
-        basic.pause(500)
-        return temperature_variable;
+        dht11_queryData(pin)
+        return Math.round(_temperature)
     }
 
 
@@ -94,30 +150,8 @@ namespace House {
     //% blockGap=7	
 
     export function getHumidity(pin: DigitalPin): number {
-        pins.digitalWritePin(pin, 0)
-        basic.pause(18)
-        let i = pins.digitalReadPin(pin)
-        pins.setPull(pin, PinPullMode.PullUp);
-        while (pins.digitalReadPin(pin) == 1);
-        while (pins.digitalReadPin(pin) == 0);
-        while (pins.digitalReadPin(pin) == 1);
-
-        let value = 0;
-        let counter = 0;
-
-        for (let i = 0; i <= 8 - 1; i++) {
-            while (pins.digitalReadPin(pin) == 0);
-            counter = 0
-            while (pins.digitalReadPin(pin) == 1) {
-                counter += 1;
-            }
-            if (counter > 3) {
-                value = value + (1 << (7 - i));
-            }
-        }
-        humidity_variable = value;
-        basic.pause(500)
-        return humidity_variable;
+         dht11_queryData(pin)
+        return Math.round(_humidity)
     }
 
     //% blockId="smarthon_get_heat" 
