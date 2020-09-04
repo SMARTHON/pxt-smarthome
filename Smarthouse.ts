@@ -301,6 +301,7 @@ namespace House {
             pins.analogWritePin(pin2, 0);
         }
         else if (intensity < 0) {
+			intensity=Math.abs(intensity);
             pins.analogWritePin(pin1, 0);
             pins.analogWritePin(pin2, intensity);
         }
