@@ -244,6 +244,7 @@ namespace House {
     //% weight=49
     //%subcategory=More
     //% blockGap=7	
+	//% blockHidden=true
 
     export function TurnRedLED(intensity: number, pin: AnalogPin): void {
 
@@ -256,6 +257,7 @@ namespace House {
     //% weight=48
     //%subcategory=More
     //% blockGap=7	
+	//% blockHidden=true
 
     export function TurnGreenLED(intensity: number, pin: AnalogPin): void {
 
@@ -268,6 +270,7 @@ namespace House {
     //% weight=47
     //%subcategory=More
     //% blockGap=7	
+	//% blockHidden=true
 
 
     export function TurnYellowLED(intensity: number, pin: AnalogPin): void {
