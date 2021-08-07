@@ -9,15 +9,15 @@ namespace House {
     let heat_variable = 0
     let button_variable = 0
     let motion_variable = 0
-    let flame_variable = 0
+    let flame_variable 
     let towngas_variable = 0
 
-	let temp = 0
-	let temp_pin=0
-	let _temperature: number = -999.0
+    let temp = 0
+    let temp_pin = 0
+    let _temperature: number = -999.0
     let _humidity: number = -999.0
     let _readSuccessful: boolean = false
-	
+
     export enum ServoDirection {
         //% block="clockwise"
         clockwise,
@@ -25,13 +25,13 @@ namespace House {
         anticlockwise
     }
 
-	export enum DHT11dataType {
-    //% block="temperature"
-    temperature,
-	//% block="humidity"
-    humidity
-	}
-	
+    export enum DHT11dataType {
+        //% block="temperature"
+        temperature,
+        //% block="humidity"
+        humidity
+    }
+
     export enum ServoSpeed {
         //% blockId=servo360_level_0
         //% block="Stop"
@@ -57,18 +57,17 @@ namespace House {
     }
 
     //% blockId="smarthon_get_light_house" 
-    //% block="Get light value (intensity) at %pin"
-    //% weight=80	
-    //% blockGap=7	
+    //% block="Get light value (percentage) at Pin %pin"
+    //% weight=65	
 
     export function getLight(pin: AnalogPin): number {
         light_variable = pins.analogReadPin(pin)
         return light_variable;
     }
 
-	
-	//% block="Get DHT11 at pin %dataPin|"
-    function dht11_queryData( dataPin: DigitalPin) {
+
+    //% block="Get DHT11 at Pin %dataPin|"
+    function dht11_queryData(dataPin: DigitalPin) {
 
         //initialize
         let startTime: number = 0
@@ -120,22 +119,21 @@ namespace House {
 
         //read data if checksum ok
         if (_readSuccessful) {
-            
-                //DHT11
-                _humidity = resultArray[0] + resultArray[1] / 100
-                _temperature = resultArray[2] + resultArray[3] / 100
-            
+
+            //DHT11
+            _humidity = resultArray[0] + resultArray[1] / 100
+            _temperature = resultArray[2] + resultArray[3] / 100
+
         }
 
         //wait 2 sec after query 
         basic.pause(2000)
 
     }
-	
+
     //% blockId="smarthon_get_temperature_house" 
-    //% block="Get temperature (°C) at %pin"
-    //% weight=79
-    //% blockGap=7	
+    //% block="Get temperature (°C) at Pin %pin"
+    //% weight=79	
 
     export function getTemperature(pin: DigitalPin): number {
 
@@ -145,20 +143,18 @@ namespace House {
 
 
     //% blockId="smarthon_get_humidity_house" 
-    //% block="Get humidity (percentage) at %pin"
+    //% block="Get humidity (percentage) at Pin %pin"
     //% weight=78	
-    //% blockGap=7	
 
     export function getHumidity(pin: DigitalPin): number {
-         dht11_queryData(pin)
+        dht11_queryData(pin)
         return Math.round(_humidity)
     }
 
     //% blockId="smarthon_get_heat" 
     //% block="Get heat (index) at %pin"
-    //% weight=77	
-    //% blockGap=7	
-	//% blockHidden=true
+    //% weight=77		
+    //% blockHidden=true
 
     export function getHeat(pin: DigitalPin): number {
         let T = getTemperature(pin);
@@ -169,24 +165,25 @@ namespace House {
 
 
 
-    //% blockId="smarthon_get_motion" 
-    //% block="Get motion (triggered or not) at %pin"
-    //% weight=75	
-    //% blockGap=7	
-
-    export function getMotion(pin: AnalogPin): number {
-        motion_variable = pins.analogReadPin(pin);
-        return motion_variable;
+    //% blockId=read_motion_sensor
+    //% block="Get motion (triggered or not) at Pin %motion_pin"
+    //% weight=40
+    export function read_motion_sensor(motion_pin: AnalogPin): boolean {
+        temp_pin = parseInt(motion_pin.toString())
+        temp = pins.analogReadPin(temp_pin)
+        if (temp > 800)
+            return true
+        else return false
     }
 
     //% blockId="smarthon_get_flame" 
-    //% block="Get flame (present or not) at %pin"
-    //% weight=74	
-    //% blockGap=7	
-
-    export function getFlame(pin: AnalogPin): number {
+    //% block="Get flame detection at Pin %pin"
+    //% weight=45	
+    export function getFlame(pin: AnalogPin): boolean {
         flame_variable = pins.analogReadPin(pin)
-        return flame_variable;
+        if(flame_variable > 300){
+        return true;}
+        else{return false;} 
     }
     //% blockId="smarthon_get_towngas" 
     //% block="Get town gas value (intensity) at %pin"
@@ -199,9 +196,10 @@ namespace House {
     }
 
     //% blockId=read_distance_sensor
-    //% block="Get distance with unit %unit|trig %trig|echo %echo"
-    //% weight=70
+    //% block="Get distance unit %unit trig %trig echo %echo"
+    //% weight=64
     //% trig.defl=DigitalPin.P14 echo.defl=DigitalPin.P15
+    //% inlineInputMode=inline
     export function read_distance_sensor(unit: DistanceUnit, trig: DigitalPin, echo: DigitalPin, maxCmDistance = 500): number {
         // send pulse
         let d = 10;
@@ -224,14 +222,13 @@ namespace House {
             default: return d;
         }
     }
-	
-	//% blockId="smarthon_colorful_led"
-    //% block="Set Colorful LED to intensity %intensity at %pin"
+
+    //% blockId="smarthon_colorful_led"
+    //% block="Turn Colorful LED to %intensity at %pin"
     //% intensity.min=0 intensity.max=1023
     //% pin.defl=AnalogPin.P0
     //% weight=50
     //%subcategory=More
-    //% blockGap=7
     export function TurnColorfulLED(intensity: number, pin: AnalogPin): void {
 
         pins.analogWritePin(pin, intensity);
@@ -243,8 +240,7 @@ namespace House {
     //% intensity.min=0 intensity.max=1023
     //% weight=49
     //%subcategory=More
-    //% blockGap=7	
-	//% blockHidden=true
+    //% blockHidden=true
 
     export function TurnRedLED(intensity: number, pin: AnalogPin): void {
 
@@ -256,8 +252,7 @@ namespace House {
     //% intensity.min=0 intensity.max=1023
     //% weight=48
     //%subcategory=More
-    //% blockGap=7	
-	//% blockHidden=true
+    //% blockHidden=true
 
     export function TurnGreenLED(intensity: number, pin: AnalogPin): void {
 
@@ -269,8 +264,7 @@ namespace House {
     //% intensity.min=0 intensity.max=1023
     //% weight=47
     //%subcategory=More
-    //% blockGap=7	
-	//% blockHidden=true
+    //% blockHidden=true
 
 
     export function TurnYellowLED(intensity: number, pin: AnalogPin): void {
@@ -284,19 +278,19 @@ namespace House {
     //% intensity.min=0 intensity.max=1023
     //% weight=46
     //%subcategory=More	
+    //% blockHidden=true
 
     export function TurnBuzzer(intensity: number, pin: AnalogPin): void {
 
         pins.analogWritePin(pin, intensity);
     }
 
-   //% blockId="smarthon_motorfan"
-    //% block="Set Motor fan to intensity %intensity at S1 %pin1 S2 %pin2"
+    //% blockId="smarthon_motorfan"
+    //% block="Set Motor fan with speed %intensity at S1 %pin1 S2 %pin2"
     //% intensity.min=-1023 intensity.max=1023
     //% pin1.defl=AnalogPin.P14 pin2.defl=AnalogPin.P15
     //% weight=45	
     //%subcategory=More
-    //% blockGap=7	
 
     export function TurnMotorCW(intensity: number, pin1: AnalogPin, pin2: AnalogPin): void {
         if (intensity > 0) {
@@ -304,7 +298,7 @@ namespace House {
             pins.analogWritePin(pin2, 0);
         }
         else if (intensity < 0) {
-			intensity=Math.abs(intensity);
+            intensity = Math.abs(intensity);
             pins.analogWritePin(pin1, 0);
             pins.analogWritePin(pin2, intensity);
         }
@@ -317,11 +311,10 @@ namespace House {
 
 
     //% blockId="smarthon_180_servo"
-    //% block="Set 180° Servo to degree %degree at %pin"
+    //% block="Turn 180° Servo to %degree degree at %pin"
     //% intensity.min=0 intensity.max=180
     //% weight=43
-    //%subcategory=More
-    //% blockGap=7	
+    //%subcategory=More	
 
     export function Turn180Servo(intensity: number, pin: AnalogPin): void {
 
@@ -330,7 +323,7 @@ namespace House {
 
 
     //% blockId="smarthon_360_servo"
-    //% block="Set 360° Servo to direction %direction|speed %speed at %pin"
+    //% block="Turn 360° Servo with %direction direction|speed %speed at %pin"
     //% weight=42
     //%subcategory=More
 
@@ -373,9 +366,14 @@ namespace House {
                 break
         }
     }
-
     
-
-
+    
+    
+    //% blockId="button" 
+    //% block="When Button at %pin pressed"	 
+    //% weight=10
+    export function Button(pin:DigitalPin,handler:()=>void){
+        pins.onPulsed(pin, PulseValue.High,handler)
+    }
 
 }
