@@ -229,6 +229,7 @@ namespace House {
     //% pin.defl=AnalogPin.P0
     //% weight=50
     //%subcategory=More
+	//% blockHidden=true
     export function TurnColorfulLED(intensity: number, pin: AnalogPin): void {
 
         pins.analogWritePin(pin, intensity);
