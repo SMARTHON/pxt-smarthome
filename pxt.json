@@ -1,12 +1,13 @@
 {
     "name": "pxt-Smarthouse",
-    "version": "1.6.3",
+    "version": "1.6.4",
     "description": "This is the extension for Smarthouse in PXT",
     "license": "MIT",
     "dependencies": {
         "core": "*"	,
-		"SSD1306_OLED": "github:tinkertanker/pxt-oled-ssd1306#v2.0.13",
+		"smarthon-iotbit" : "github:SMARTHON/pxt-iot-bit",
 		"neopixel": "github:microsoft/pxt-neopixel#v0.7.3"
+		
     },
     "files": [
         "README.md",

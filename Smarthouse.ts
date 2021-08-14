@@ -61,7 +61,13 @@ namespace House {
     //% weight=65	
 
     export function getLight(pin: AnalogPin): number {
-        light_variable = pins.analogReadPin(pin)
+        light_variable = Math.round(pins.map(
+            pins.analogReadPin(pin),
+            0,
+            1023,
+            0,
+            100
+        ));
         return light_variable;
     }
 
