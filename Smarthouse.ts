@@ -9,7 +9,7 @@ namespace House {
     let heat_variable = 0
     let button_variable = 0
     let motion_variable = 0
-    let flame_variable 
+    let flame_variable
     let towngas_variable = 0
 
     let temp = 0
@@ -17,6 +17,9 @@ namespace House {
     let _temperature: number = -999.0
     let _humidity: number = -999.0
     let _readSuccessful: boolean = false
+    let _sensorresponding: boolean = false
+    let _firsttime: boolean = true
+    
 
     export enum ServoDirection {
         //% block="clockwise"
@@ -75,6 +78,11 @@ namespace House {
     //% block="Get DHT11 at Pin %dataPin|"
     function dht11_queryData(dataPin: DigitalPin) {
 
+        if (_firsttime == true) {
+            _firsttime = false
+            dht11_queryData(dataPin)
+        }
+
         //initialize
         let startTime: number = 0
         let endTime: number = 0
@@ -87,16 +95,22 @@ namespace House {
         _humidity = -999.0
         _temperature = -999.0
         _readSuccessful = false
-
+        _sensorresponding = false
         startTime = input.runningTimeMicros()
 
         //request data
         pins.digitalWritePin(dataPin, 0) //begin protocol
-        basic.pause(18)
-        //if (pullUp) pins.setPull(dataPin, PinPullMode.PullUp) //pull up data pin if needed
+        basic.pause(18) 
+        pins.setPull(dataPin, PinPullMode.PullUp) //pull up data pin if needed
         pins.digitalReadPin(dataPin)
-        control.waitMicros(20)
-        while (pins.digitalReadPin(dataPin) == 1);
+        control.waitMicros(40)
+        if (pins.digitalReadPin(dataPin) == 1) {
+            //if no respone,exit the loop to avoid Infinity loop
+            pins.setPull(dataPin, PinPullMode.PullNone) //release pull up
+        }
+        else {
+            pins.setPull(dataPin, PinPullMode.PullNone) //release pull up
+
         while (pins.digitalReadPin(dataPin) == 0); //sensor response
         while (pins.digitalReadPin(dataPin) == 1); //sensor response
 
@@ -132,9 +146,9 @@ namespace House {
 
         }
 
-        //wait 2 sec after query 
-        basic.pause(2000)
-
+        //wait 1 sec after query 
+        basic.pause(1000)
+        }
     }
 
     //% blockId="smarthon_get_temperature_house" 
@@ -144,7 +158,9 @@ namespace House {
     export function getTemperature(pin: DigitalPin): number {
 
         dht11_queryData(pin)
-        return Math.round(_temperature)
+        if (_readSuccessful){
+        return Math.round(_temperature)}
+        else{return 0;}
     }
 
 
@@ -154,7 +170,9 @@ namespace House {
 
     export function getHumidity(pin: DigitalPin): number {
         dht11_queryData(pin)
+        if (_readSuccessful) {
         return Math.round(_humidity)
+        }else{return 0;}
     }
 
     //% blockId="smarthon_get_heat" 
@@ -187,9 +205,10 @@ namespace House {
     //% weight=45	
     export function getFlame(pin: AnalogPin): boolean {
         flame_variable = pins.analogReadPin(pin)
-        if(flame_variable > 300){
-        return true;}
-        else{return false;} 
+        if (flame_variable > 300) {
+            return true;
+        }
+        else { return false; }
     }
     //% blockId="smarthon_get_towngas" 
     //% block="Get town gas value (intensity) at %pin"
@@ -235,7 +254,7 @@ namespace House {
     //% pin.defl=AnalogPin.P0
     //% weight=50
     //%subcategory=More
-	//% blockHidden=true
+    //% blockHidden=true
     export function TurnColorfulLED(intensity: number, pin: AnalogPin): void {
 
         pins.analogWritePin(pin, intensity);
@@ -373,14 +392,14 @@ namespace House {
                 break
         }
     }
-    
-    
-    
+
+
+
     //% blockId="button" 
     //% block="When Button at %pin pressed"	 
     //% weight=10
-    export function Button(pin:DigitalPin,handler:()=>void){
-        pins.onPulsed(pin, PulseValue.High,handler)
+    export function Button(pin: DigitalPin, handler: () => void) {
+        pins.onPulsed(pin, PulseValue.High, handler)
     }
 
 }

@@ -1,6 +1,6 @@
 {
     "name": "pxt-Smarthouse",
-    "version": "1.6.4",
+    "version": "1.6.5",
     "description": "This is the extension for Smarthouse in PXT",
     "license": "MIT",
     "dependencies": {
