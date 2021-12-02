@@ -19,7 +19,7 @@ namespace House {
     let _readSuccessful: boolean = false
     let _sensorresponding: boolean = false
     let _firsttime: boolean = true
-    
+
 
     export enum ServoDirection {
         //% block="clockwise"
@@ -100,7 +100,7 @@ namespace House {
 
         //request data
         pins.digitalWritePin(dataPin, 0) //begin protocol
-        basic.pause(18) 
+        basic.pause(18)
         pins.setPull(dataPin, PinPullMode.PullUp) //pull up data pin if needed
         pins.digitalReadPin(dataPin)
         control.waitMicros(40)
@@ -111,43 +111,43 @@ namespace House {
         else {
             pins.setPull(dataPin, PinPullMode.PullNone) //release pull up
 
-        while (pins.digitalReadPin(dataPin) == 0); //sensor response
-        while (pins.digitalReadPin(dataPin) == 1); //sensor response
+            while (pins.digitalReadPin(dataPin) == 0); //sensor response
+            while (pins.digitalReadPin(dataPin) == 1); //sensor response
 
-        //read data (5 bytes)
-        for (let index = 0; index < 40; index++) {
-            while (pins.digitalReadPin(dataPin) == 1);
-            while (pins.digitalReadPin(dataPin) == 0);
-            control.waitMicros(28)
-            //if sensor pull up data pin for more than 28 us it means 1, otherwise 0
-            if (pins.digitalReadPin(dataPin) == 1) dataArray[index] = true
-        }
+            //read data (5 bytes)
+            for (let index = 0; index < 40; index++) {
+                while (pins.digitalReadPin(dataPin) == 1);
+                while (pins.digitalReadPin(dataPin) == 0);
+                control.waitMicros(28)
+                //if sensor pull up data pin for more than 28 us it means 1, otherwise 0
+                if (pins.digitalReadPin(dataPin) == 1) dataArray[index] = true
+            }
 
-        endTime = input.runningTimeMicros()
+            endTime = input.runningTimeMicros()
 
-        //convert byte number array to integer
-        for (let index = 0; index < 5; index++)
-            for (let index2 = 0; index2 < 8; index2++)
-                if (dataArray[8 * index + index2]) resultArray[index] += 2 ** (7 - index2)
+            //convert byte number array to integer
+            for (let index = 0; index < 5; index++)
+                for (let index2 = 0; index2 < 8; index2++)
+                    if (dataArray[8 * index + index2]) resultArray[index] += 2 ** (7 - index2)
 
-        //verify checksum
-        checksumTmp = resultArray[0] + resultArray[1] + resultArray[2] + resultArray[3]
-        checksum = resultArray[4]
-        if (checksumTmp >= 512) checksumTmp -= 512
-        if (checksumTmp >= 256) checksumTmp -= 256
-        if (checksum == checksumTmp) _readSuccessful = true
+            //verify checksum
+            checksumTmp = resultArray[0] + resultArray[1] + resultArray[2] + resultArray[3]
+            checksum = resultArray[4]
+            if (checksumTmp >= 512) checksumTmp -= 512
+            if (checksumTmp >= 256) checksumTmp -= 256
+            if (checksum == checksumTmp) _readSuccessful = true
 
-        //read data if checksum ok
-        if (_readSuccessful) {
+            //read data if checksum ok
+            if (_readSuccessful) {
 
-            //DHT11
-            _humidity = resultArray[0] + resultArray[1] / 100
-            _temperature = resultArray[2] + resultArray[3] / 100
+                //DHT11
+                _humidity = resultArray[0] + resultArray[1] / 100
+                _temperature = resultArray[2] + resultArray[3] / 100
 
-        }
+            }
 
-        //wait 1 sec after query 
-        basic.pause(1000)
+            //wait 1.5 sec after query 
+            basic.pause(1500)
         }
     }
 
@@ -158,9 +158,10 @@ namespace House {
     export function getTemperature(pin: DigitalPin): number {
 
         dht11_queryData(pin)
-        if (_readSuccessful){
-        return Math.round(_temperature)}
-        else{return 0;}
+        if (_readSuccessful) {
+            return Math.round(_temperature)
+        }
+        else { return 0; }
     }
 
 
@@ -171,8 +172,8 @@ namespace House {
     export function getHumidity(pin: DigitalPin): number {
         dht11_queryData(pin)
         if (_readSuccessful) {
-        return Math.round(_humidity)
-        }else{return 0;}
+            return Math.round(_humidity)
+        } else { return 0; }
     }
 
     //% blockId="smarthon_get_heat" 
@@ -213,6 +214,7 @@ namespace House {
     //% blockId="smarthon_get_towngas" 
     //% block="Get town gas value (intensity) at %pin"
     //% weight=73
+    //% blockHidden=true
 
     export function getTownGas(pin: AnalogPin): number {
         towngas_variable = pins.analogReadPin(pin);
@@ -312,26 +314,14 @@ namespace House {
     }
 
     //% blockId="smarthon_motorfan"
-    //% block="Set Motor fan with speed %intensity at S1 %pin1 S2 %pin2"
-    //% intensity.min=-1023 intensity.max=1023
-    //% pin1.defl=AnalogPin.P14 pin2.defl=AnalogPin.P15
+    //% block="Set Motor fan with speed %intensity at %pin1"
+    //% intensity.min=0 intensity.max=1023
+    //% pin1.defl=AnalogPin.P1
     //% weight=45	
     //%subcategory=More
 
-    export function TurnMotorCW(intensity: number, pin1: AnalogPin, pin2: AnalogPin): void {
-        if (intensity > 0) {
+    export function TurnMotor(intensity: number, pin1: AnalogPin): void {
             pins.analogWritePin(pin1, intensity);
-            pins.analogWritePin(pin2, 0);
-        }
-        else if (intensity < 0) {
-            intensity = Math.abs(intensity);
-            pins.analogWritePin(pin1, 0);
-            pins.analogWritePin(pin2, intensity);
-        }
-        else {
-            pins.analogWritePin(pin1, 0);
-            pins.analogWritePin(pin2, 0);
-        }
     }
 
 
