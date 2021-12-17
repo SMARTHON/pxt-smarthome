@@ -17,8 +17,9 @@ namespace House {
     let _temperature: number = -999.0
     let _humidity: number = -999.0
     let _readSuccessful: boolean = false
-    let _sensorresponding: boolean = false
     let _firsttime: boolean = true
+    let _last_successful_query_temperature: number = 0
+    let _last_successful_query_humidity: number = 0
 
 
     export enum ServoDirection {
@@ -92,12 +93,9 @@ namespace House {
         let resultArray: number[] = []
         for (let index = 0; index < 40; index++) dataArray.push(false)
         for (let index = 0; index < 5; index++) resultArray.push(0)
-        _humidity = -999.0
-        _temperature = -999.0
+        _humidity = 0
+        _temperature = 0
         _readSuccessful = false
-        _sensorresponding = false
-        startTime = input.runningTimeMicros()
-
         //request data
         pins.digitalWritePin(dataPin, 0) //begin protocol
         basic.pause(18)
@@ -115,15 +113,22 @@ namespace House {
             while (pins.digitalReadPin(dataPin) == 1); //sensor response
 
             //read data (5 bytes)
-            for (let index = 0; index < 40; index++) {
-                while (pins.digitalReadPin(dataPin) == 1);
-                while (pins.digitalReadPin(dataPin) == 0);
+             for (let index = 0; index < 40; index++) {
+                startTime = input.runningTimeMicros()
+                while (pins.digitalReadPin(dataPin) == 1){
+                    endTime = input.runningTimeMicros()
+                    if ((endTime - startTime) > 150) { break; }
+                };
+                while (pins.digitalReadPin(dataPin) == 0){
+                    endTime = input.runningTimeMicros()
+                    if ((endTime - startTime) > 150) { break; }
+                };
                 control.waitMicros(28)
                 //if sensor pull up data pin for more than 28 us it means 1, otherwise 0
                 if (pins.digitalReadPin(dataPin) == 1) dataArray[index] = true
             }
 
-            endTime = input.runningTimeMicros()
+           
 
             //convert byte number array to integer
             for (let index = 0; index < 5; index++)
@@ -137,18 +142,20 @@ namespace House {
             if (checksumTmp >= 256) checksumTmp -= 256
             if (checksum == checksumTmp) _readSuccessful = true
 
-            //read data if checksum ok
+            //set data variable if checksum ok
             if (_readSuccessful) {
-
-                //DHT11
                 _humidity = resultArray[0] + resultArray[1] / 100
                 _temperature = resultArray[2] + resultArray[3] / 100
-
+                _last_successful_query_humidity = _humidity
+                _last_successful_query_temperature = _temperature
+            } else {
+                _humidity = _last_successful_query_humidity
+                _temperature = _last_successful_query_temperature
             }
 
-            //wait 1.5 sec after query 
-            basic.pause(1500)
         }
+		   //wait 1.5 sec after query 
+            basic.pause(1500)
     }
 
     //% blockId="smarthon_get_temperature_house" 
@@ -158,10 +165,11 @@ namespace House {
     export function getTemperature(pin: DigitalPin): number {
 
         dht11_queryData(pin)
-        if (_readSuccessful) {
-            return Math.round(_temperature)
-        }
-        else { return 0; }
+        // if (_readSuccessful) {
+            // return Math.round(_temperature)
+        // }
+        // else { return 0; }
+		return _temperature;
     }
 
 
@@ -171,9 +179,10 @@ namespace House {
 
     export function getHumidity(pin: DigitalPin): number {
         dht11_queryData(pin)
-        if (_readSuccessful) {
-            return Math.round(_humidity)
-        } else { return 0; }
+        // if (_readSuccessful) {
+            // return Math.round(_humidity)
+        // } else { return 0; }
+		return _humidity;
     }
 
     //% blockId="smarthon_get_heat" 
