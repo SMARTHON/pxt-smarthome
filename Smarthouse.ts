@@ -158,31 +158,23 @@ namespace House {
             basic.pause(1500)
     }
 
-    //% blockId="smarthon_get_temperature_house" 
-    //% block="Get temperature (°C) at Pin %pin"
-    //% weight=79	
+    //% block="DHT11 Read %dht11data| at pin %dht11pin|"
+    //% weight=90
+    export function readData(dht11data: DHT11dataType, dht11pin: DigitalPin): number {
+        // querydata
+        dht11_queryData(dht11pin)
+        //return temperature /humidity
+        // if (dht11data == DHT11dataType.temperature && _readSuccessful)
+        //     return Math.round(_temperature)
+        // else if (dht11data == DHT11dataType.humidity && _readSuccessful)
+        //     return Math.round(_humidity)
+        // else return 0
 
-    export function getTemperature(pin: DigitalPin): number {
-
-        dht11_queryData(pin)
-        // if (_readSuccessful) {
-            // return Math.round(_temperature)
-        // }
-        // else { return 0; }
-		return _temperature;
-    }
-
-
-    //% blockId="smarthon_get_humidity_house" 
-    //% block="Get humidity (percentage) at Pin %pin"
-    //% weight=78	
-
-    export function getHumidity(pin: DigitalPin): number {
-        dht11_queryData(pin)
-        // if (_readSuccessful) {
-            // return Math.round(_humidity)
-        // } else { return 0; }
-		return _humidity;
+        if (dht11data == DHT11dataType.temperature) {
+            return Math.round(_temperature)
+        }
+        else
+            return Math.round(_humidity)
     }
 
     //% blockId="smarthon_get_heat" 
@@ -191,11 +183,13 @@ namespace House {
     //% blockHidden=true
 
     export function getHeat(pin: DigitalPin): number {
-        let T = getTemperature(pin);
-        let H = getHumidity(pin);
-        heat_variable = -43.379 + 2.09401523 * T + 10.14333127 * H + -0.22475541 * T * H + -6.3783 * 0.001 * T * T + -5.481717 * 0.01 * H * H + 1.22874 * 0.001 * T * T * H + 8.5282 * 0.0001 * T * H * H + -1.99 * 0.000001 * T * T * H * H;
-        return heat_variable;
+        // let T = getTemperature(pin);
+        // let H = getHumidity(pin);
+        // heat_variable = -43.379 + 2.09401523 * T + 10.14333127 * H + -0.22475541 * T * H + -6.3783 * 0.001 * T * T + -5.481717 * 0.01 * H * H + 1.22874 * 0.001 * T * T * H + 8.5282 * 0.0001 * T * H * H + -1.99 * 0.000001 * T * T * H * H;
+        // return heat_variable;
+		return 0;
     }
+
 
 
 
