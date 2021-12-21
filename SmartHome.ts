@@ -1,7 +1,7 @@
 /**
  * Custom blocks
  */
-//% weight=98 color=#ffba52 icon="\uf015" block="Smarthouse"
+//% weight=98 color=#ffba52 icon="\uf015" block="SmartHome"
 namespace House {
     let light_variable = 0
     let temperature_variable = 0

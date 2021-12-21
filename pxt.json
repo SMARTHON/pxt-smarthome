@@ -1,7 +1,7 @@
 {
-    "name": "pxt-Smarthouse",
-    "version": "1.6.8",
-    "description": "This is the extension for Smarthouse in PXT",
+    "name": "pxt-SmartHome",
+    "version": "1.6.9",
+    "description": "This is the extension for SmartHome in PXT",
     "license": "MIT",
     "dependencies": {
         "core": "*"	,
@@ -11,7 +11,7 @@
     },
     "files": [
         "README.md",
-        "Smarthouse.ts"
+        "SmartHome.ts"
     ],
     "public": true
 }
