@@ -11,9 +11,10 @@ namespace House {
     let motion_variable = 0
     let flame_variable
     let towngas_variable = 0
-
-    let temp = 0
+    let temp_IAQ=0
+    let hum_IAQ=0
     let temp_pin = 0
+    let temp=0
     let _temperature: number = -999.0
     let _humidity: number = -999.0
     let _readSuccessful: boolean = false
@@ -28,7 +29,12 @@ namespace House {
         //% block="anti-clockwise"
         anticlockwise
     }
-
+    export enum Temp_degree{
+        //% block="°C"
+        degree_Celsius,
+        //% block="°F"
+        degree_Fahrenheit
+    }
     export enum DHT11dataType {
         //% block="temperature"
         temperature,
@@ -60,6 +66,10 @@ namespace House {
         MicroSeconds
     }
 
+
+    /**
+     * Read the light intensity (in percentage) result form light sensor
+     */
     //% blockId="smarthon_get_light_house" 
     //% block="Get light value (percentage) at Pin %pin"
     //% weight=65	
@@ -113,13 +123,13 @@ namespace House {
             while (pins.digitalReadPin(dataPin) == 1); //sensor response
 
             //read data (5 bytes)
-             for (let index = 0; index < 40; index++) {
+            for (let index = 0; index < 40; index++) {
                 startTime = input.runningTimeMicros()
-                while (pins.digitalReadPin(dataPin) == 1){
+                while (pins.digitalReadPin(dataPin) == 1) {
                     endTime = input.runningTimeMicros()
                     if ((endTime - startTime) > 150) { break; }
                 };
-                while (pins.digitalReadPin(dataPin) == 0){
+                while (pins.digitalReadPin(dataPin) == 0) {
                     endTime = input.runningTimeMicros()
                     if ((endTime - startTime) > 150) { break; }
                 };
@@ -128,7 +138,7 @@ namespace House {
                 if (pins.digitalReadPin(dataPin) == 1) dataArray[index] = true
             }
 
-           
+
 
             //convert byte number array to integer
             for (let index = 0; index < 5; index++)
@@ -154,27 +164,90 @@ namespace House {
             }
 
         }
-		   //wait 1.5 sec after query 
-            basic.pause(1500)
+        //wait 1.5 sec after query 
+        basic.pause(1500)
     }
 
-    //% block="DHT11 Read %dht11data| at pin %dht11pin|"
+
+    /**
+     * Query the temperature and humidity infromation from DHT11 Temperature and Humidity sensor
+     *  
+     */    
+    //% block="Read Temperature & Humidity Sensor at pin %dht11pin|"
     //% weight=90
-    export function readData(dht11data: DHT11dataType, dht11pin: DigitalPin): number {
+    //% group="Temperature and Humidity Sensor (DHT11)"
+    //% blockGap=12
+    export function readDHT11(dht11pin: DigitalPin): void {
         // querydata
         dht11_queryData(dht11pin)
-        //return temperature /humidity
-        // if (dht11data == DHT11dataType.temperature && _readSuccessful)
-        //     return Math.round(_temperature)
-        // else if (dht11data == DHT11dataType.humidity && _readSuccessful)
-        //     return Math.round(_humidity)
-        // else return 0
+    }
 
-        if (dht11data == DHT11dataType.temperature) {
+
+
+    /**
+     * Get the Temperature value (degree in Celsius or Fahrenheit) after queried the Temperature and Humidity sensor
+     */
+
+    //% block="Get Temperature |%temp_degree"
+    //% weight=79
+    //% group="Temperature and Humidity Sensor (DHT11)"
+    export function readTemperatureData(temp_degree: Temp_degree): number {
+        // querydata
+        if(temp_degree==Temp_degree.degree_Celsius){
             return Math.round(_temperature)
         }
-        else
-            return Math.round(_humidity)
+        else {
+            return Math.round((_temperature*1.8)+32)
+        }    
+    }
+
+    /**
+     * Get the humidity value (in percentage) after queried the Temperature and Humidity sensor
+     */
+    //% block="Get Humidity"
+    //% weight=78
+    //% group="Temperature and Humidity Sensor (DHT11)"
+    export function readHumidityData(): number {
+        // querydata
+        
+        return Math.round(_humidity)
+        
+       
+    }
+
+
+    /**
+     * Basic on the temperature and humidity to calculate the IAQ score, detail can refer to online documentation
+     */
+    //% blockId="smarthon_get_IAQ" 
+    //% block="Get IAQ Score"
+    //% weight=77		
+    //% group="Temperature and Humidity Sensor (DHT11)"
+    export function getIAQ(): number {
+
+        let t = Math.round(_temperature)
+        let h = _humidity
+        //OLED.writeNumNewLine(t)
+        //OLED.writeNumNewLine(h)
+        //get temp_IAQ
+        if( t<1 || t>36){ temp_IAQ=0 }
+        else if ((t >= 1 && t <= 5) || (t >= 34 && t <= 36)) { temp_IAQ = 20 }
+        else if ((t >= 6 && t <= 10) || (t >= 29 && t <= 33)) { temp_IAQ = 40 }
+        else if ((t >= 11 && t <= 16) || (t >= 26 && t <= 28)) { temp_IAQ = 60 }
+        else if ((t >= 17 && t <= 19) || (t >= 23 && t <= 25)) { temp_IAQ = 80 }
+        else if ((t >= 20 && t <= 22)) { temp_IAQ = 100 }
+        //get hum_IAQ
+        if (h <20 || h > 90) { hum_IAQ = 0 }
+        else if ((h >= 20 && h <= 29) || (h >= 86 && h <= 90)) { hum_IAQ = 20 }
+        else if ((h >= 30 && h <= 39) || (h >= 80 && h <= 85)) { hum_IAQ = 40 }
+        else if ((h >= 40 && h <= 49) || (h >= 76 && h <= 79)) { hum_IAQ = 60 }
+        else if ((h >= 50 && h <= 59) || (h >= 71 && h <= 75)) { hum_IAQ = 80 }
+        else if ((h >= 60 && h <= 70)) { hum_IAQ = 100 }    
+        
+        return Math.round((temp_IAQ + hum_IAQ)/2)
+
+
+
     }
 
     //% blockId="smarthon_get_heat" 
@@ -187,12 +260,14 @@ namespace House {
         // let H = getHumidity(pin);
         // heat_variable = -43.379 + 2.09401523 * T + 10.14333127 * H + -0.22475541 * T * H + -6.3783 * 0.001 * T * T + -5.481717 * 0.01 * H * H + 1.22874 * 0.001 * T * T * H + 8.5282 * 0.0001 * T * H * H + -1.99 * 0.000001 * T * T * H * H;
         // return heat_variable;
-		return 0;
+        return 0;
     }
 
 
 
-
+    /**
+     * Read the detection result of motion sensor, return true when something moving, otherwise return false
+     */
     //% blockId=read_motion_sensor
     //% block="Get motion (triggered or not) at Pin %motion_pin"
     //% weight=40
@@ -204,6 +279,9 @@ namespace House {
         else return false
     }
 
+    /** 
+     * Read the detection result of flame sensor, return true when detect flame, otherwise return false
+     */
     //% blockId="smarthon_get_flame" 
     //% block="Get flame detection at Pin %pin"
     //% weight=45	
@@ -225,6 +303,10 @@ namespace House {
 
     }
 
+
+    /**
+     * Read the distance data from the ultrasonic distance sensor, can return data in different unit.
+     */
     //% blockId=read_distance_sensor
     //% block="Get distance unit %unit trig %trig echo %echo"
     //% weight=64
@@ -303,7 +385,9 @@ namespace House {
         pins.analogWritePin(pin, intensity);
     }
 
-
+    /**
+     *  Turn on mono tone Buzzer to make the noise
+     */
     //% blockId="smarthon_buzzer"
     //% block="Set Buzzer to intensity %intensity at %pin"
     //% intensity.min=0 intensity.max=1023
@@ -316,6 +400,10 @@ namespace House {
         pins.analogWritePin(pin, intensity);
     }
 
+
+    /**
+     * Control the Motor to spin with specific speed
+     */
     //% blockId="smarthon_motorfan"
     //% block="Set Motor fan with speed %intensity at %pin1"
     //% intensity.min=0 intensity.max=1023
@@ -324,10 +412,14 @@ namespace House {
     //%subcategory=More
 
     export function TurnMotor(intensity: number, pin1: AnalogPin): void {
-            pins.analogWritePin(pin1, intensity);
+        pins.analogWritePin(pin1, intensity);
     }
 
 
+
+    /**
+    *  Control the 180 degree servo to specific angle
+    */
 
     //% blockId="smarthon_180_servo"
     //% block="Turn 180° Servo to %degree degree at %pin"
@@ -340,6 +432,10 @@ namespace House {
         pins.servoWritePin(pin, intensity)
     }
 
+    /**
+     * Control the 360 degree servo to rotate with direction and Speed
+     * 
+     */
 
     //% blockId="smarthon_360_servo"
     //% block="Turn 360° Servo with %direction direction|speed %speed at %pin"
@@ -386,7 +482,9 @@ namespace House {
         }
     }
 
-
+    /**
+     * When the Pin is pressed, it will trigger the function inside the block
+     */
 
     //% blockId="button" 
     //% block="When Button at %pin pressed"	 
