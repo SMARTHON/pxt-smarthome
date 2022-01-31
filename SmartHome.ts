@@ -11,10 +11,10 @@ namespace House {
     let motion_variable = 0
     let flame_variable
     let towngas_variable = 0
-    let temp_IAQ=0
-    let hum_IAQ=0
+    let temp_IAQ = 0
+    let hum_IAQ = 0
     let temp_pin = 0
-    let temp=0
+    let temp = 0
     let _temperature: number = -999.0
     let _humidity: number = -999.0
     let _readSuccessful: boolean = false
@@ -29,7 +29,7 @@ namespace House {
         //% block="anti-clockwise"
         anticlockwise
     }
-    export enum Temp_degree{
+    export enum Temp_degree {
         //% block="°C"
         degree_Celsius,
         //% block="°F"
@@ -40,6 +40,23 @@ namespace House {
         temperature,
         //% block="humidity"
         humidity
+    }
+
+    export enum PressButtonList {
+        //% block="P0"
+        b0 = 0,
+        //% block="P1"
+        b1 = 1,
+        //% block="P2"
+        b2 = 2,
+        //% block="P12"
+        b12 = 12,
+        //% block="P13"
+        b13 = 13,
+        //% block="P14"
+        b14 = 14,
+        //% block="P15"
+        b15 = 15
     }
 
     export enum ServoSpeed {
@@ -106,9 +123,10 @@ namespace House {
         _humidity = 0
         _temperature = 0
         _readSuccessful = false
+
         //request data
         pins.digitalWritePin(dataPin, 0) //begin protocol
-        basic.pause(18)
+        control.waitMicros(18000)
         pins.setPull(dataPin, PinPullMode.PullUp) //pull up data pin if needed
         pins.digitalReadPin(dataPin)
         control.waitMicros(40)
@@ -122,22 +140,40 @@ namespace House {
             while (pins.digitalReadPin(dataPin) == 0); //sensor response
             while (pins.digitalReadPin(dataPin) == 1); //sensor response
 
+            //-------------V2---------------------------------
             //read data (5 bytes)
-            for (let index = 0; index < 40; index++) {
-                startTime = input.runningTimeMicros()
-                while (pins.digitalReadPin(dataPin) == 1) {
-                    endTime = input.runningTimeMicros()
-                    if ((endTime - startTime) > 150) { break; }
-                };
-                while (pins.digitalReadPin(dataPin) == 0) {
-                    endTime = input.runningTimeMicros()
-                    if ((endTime - startTime) > 150) { break; }
-                };
-                control.waitMicros(28)
-                //if sensor pull up data pin for more than 28 us it means 1, otherwise 0
-                if (pins.digitalReadPin(dataPin) == 1) dataArray[index] = true
+            if (control.ramSize() > 20000) {
+                for (let index = 0; index < 40; index++) {
+                    startTime = input.runningTimeMicros()
+                    while (pins.digitalReadPin(dataPin) == 1) {
+                        endTime = input.runningTimeMicros()
+                        if ((endTime - startTime) > 150) {
+                            //OLED.writeStringNewLine("break")
+                            break;
+                        }
+                    };
+                    while (pins.digitalReadPin(dataPin) == 0) {
+                        endTime = input.runningTimeMicros()
+                        if ((endTime - startTime) > 150) {
+                            //OLED.writeStringNewLine("break")
+                            break;
+                        }
+                    };
+                    control.waitMicros(28)
+                    //if sensor pull up data pin for more than 28 us it means 1, otherwise 0
+                    if (pins.digitalReadPin(dataPin) == 1) dataArray[index] = true
+                }
             }
-
+            //-------------------V1------------------------
+            else if (control.ramSize() < 20000) {
+                for (let index = 0; index < 40; index++) {
+                    while (pins.digitalReadPin(dataPin) == 1);
+                    while (pins.digitalReadPin(dataPin) == 0);
+                    control.waitMicros(28)
+                    //if sensor still pull up data pin after 28 us it means 1, otherwise 0
+                    if (pins.digitalReadPin(dataPin) == 1) dataArray[index] = true
+                }
+            }
 
 
             //convert byte number array to integer
@@ -154,11 +190,13 @@ namespace House {
 
             //set data variable if checksum ok
             if (_readSuccessful) {
+                //OLED.writeStringNewLine("success")
                 _humidity = resultArray[0] + resultArray[1] / 100
                 _temperature = resultArray[2] + resultArray[3] / 100
                 _last_successful_query_humidity = _humidity
                 _last_successful_query_temperature = _temperature
             } else {
+                //OLED.writeStringNewLine("fail")
                 _humidity = _last_successful_query_humidity
                 _temperature = _last_successful_query_temperature
             }
@@ -172,7 +210,7 @@ namespace House {
     /**
      * Query the temperature and humidity infromation from DHT11 Temperature and Humidity sensor
      *  
-     */    
+     */
     //% block="Read Temperature & Humidity Sensor at pin %dht11pin|"
     //% weight=90
     //% group="Temperature and Humidity Sensor (DHT11)"
@@ -193,12 +231,12 @@ namespace House {
     //% group="Temperature and Humidity Sensor (DHT11)"
     export function readTemperatureData(temp_degree: Temp_degree): number {
         // querydata
-        if(temp_degree==Temp_degree.degree_Celsius){
-            return Math.round(_temperature)
+        if (temp_degree == Temp_degree.degree_Celsius) {
+            return Math.round(_last_successful_query_temperature)
         }
         else {
-            return Math.round((_temperature*1.8)+32)
-        }    
+            return Math.round((_last_successful_query_temperature * 1.8) + 32)
+        }
     }
 
     /**
@@ -209,10 +247,10 @@ namespace House {
     //% group="Temperature and Humidity Sensor (DHT11)"
     export function readHumidityData(): number {
         // querydata
-        
-        return Math.round(_humidity)
-        
-       
+
+        return Math.round(_last_successful_query_humidity)
+
+
     }
 
 
@@ -225,26 +263,26 @@ namespace House {
     //% group="Temperature and Humidity Sensor (DHT11)"
     export function getIAQ(): number {
 
-        let t = Math.round(_temperature)
-        let h = _humidity
+        let t = Math.round(_last_successful_query_temperature)
+        let h = _last_successful_query_humidity
         //OLED.writeNumNewLine(t)
         //OLED.writeNumNewLine(h)
         //get temp_IAQ
-        if( t<1 || t>36){ temp_IAQ=0 }
+        if (t < 1 || t > 36) { temp_IAQ = 0 }
         else if ((t >= 1 && t <= 5) || (t >= 34 && t <= 36)) { temp_IAQ = 20 }
         else if ((t >= 6 && t <= 10) || (t >= 29 && t <= 33)) { temp_IAQ = 40 }
         else if ((t >= 11 && t <= 16) || (t >= 26 && t <= 28)) { temp_IAQ = 60 }
         else if ((t >= 17 && t <= 19) || (t >= 23 && t <= 25)) { temp_IAQ = 80 }
         else if ((t >= 20 && t <= 22)) { temp_IAQ = 100 }
         //get hum_IAQ
-        if (h <20 || h > 90) { hum_IAQ = 0 }
+        if (h < 20 || h > 90) { hum_IAQ = 0 }
         else if ((h >= 20 && h <= 29) || (h >= 86 && h <= 90)) { hum_IAQ = 20 }
         else if ((h >= 30 && h <= 39) || (h >= 80 && h <= 85)) { hum_IAQ = 40 }
         else if ((h >= 40 && h <= 49) || (h >= 76 && h <= 79)) { hum_IAQ = 60 }
         else if ((h >= 50 && h <= 59) || (h >= 71 && h <= 75)) { hum_IAQ = 80 }
-        else if ((h >= 60 && h <= 70)) { hum_IAQ = 100 }    
-        
-        return Math.round((temp_IAQ + hum_IAQ)/2)
+        else if ((h >= 60 && h <= 70)) { hum_IAQ = 100 }
+
+        return Math.round((temp_IAQ + hum_IAQ) / 2)
 
 
 
@@ -271,10 +309,10 @@ namespace House {
     //% blockId=read_motion_sensor
     //% block="Get motion (triggered or not) at Pin %motion_pin"
     //% weight=40
-    export function read_motion_sensor(motion_pin: AnalogPin): boolean {
-        temp_pin = parseInt(motion_pin.toString())
-        temp = pins.analogReadPin(temp_pin)
-        if (temp > 800)
+    export function read_motion_sensor(motion_pin: DigitalPin): boolean {
+        //temp_pin = parseInt(motion_pin.toString())
+        temp = pins.digitalReadPin(motion_pin)
+        if (temp==1)
             return true
         else return false
     }
@@ -285,9 +323,9 @@ namespace House {
     //% blockId="smarthon_get_flame" 
     //% block="Get flame detection at Pin %pin"
     //% weight=45	
-    export function getFlame(pin: AnalogPin): boolean {
-        flame_variable = pins.analogReadPin(pin)
-        if (flame_variable > 300) {
+    export function getFlame(pin: DigitalPin): boolean {
+        flame_variable = pins.digitalReadPin(pin)
+        if (flame_variable == 1) {
             return true;
         }
         else { return false; }
@@ -489,8 +527,36 @@ namespace House {
     //% blockId="button" 
     //% block="When Button at %pin pressed"	 
     //% weight=10
-    export function Button(pin: DigitalPin, handler: () => void) {
-        pins.onPulsed(pin, PulseValue.High, handler)
+    export function Button(pin: PressButtonList, handler: () => void) {
+        let buttonName;
+        switch (pin) {
+            case PressButtonList.b0:
+                buttonName = DigitalPin.P0
+                break
+            case PressButtonList.b1:
+                buttonName = DigitalPin.P1
+                break
+            case PressButtonList.b2:
+                buttonName = DigitalPin.P2
+                break
+            case PressButtonList.b12:
+                buttonName = DigitalPin.P12
+                break
+            case PressButtonList.b13:
+                buttonName = DigitalPin.P13
+                break
+            case PressButtonList.b14:
+                buttonName = DigitalPin.P14
+                break
+            case PressButtonList.b15:
+                buttonName = DigitalPin.P15
+                break
+            default:
+                buttonName = DigitalPin.P0
+                break
+        }
+
+        pins.onPulsed(buttonName, PulseValue.High, handler)
     }
 
 }
