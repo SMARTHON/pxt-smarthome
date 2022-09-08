@@ -1,9 +1,9 @@
 
-# Smarthon-smartcity-kit
+# Smarthon-Smart Home IoT Maker Kit
 
 A PXT library for Smarthon Smart Home IoT Maker kit
 
-## About Smarthon Smart City IoT Starter Kit
+## About Smarthon Smart Home IoT Maker Kit
 
 Smarthon Smart Home IoT Maker Kit for micro:bit is designed to introduce smart home concept implementation of Internet of Things (IoT) into daily life. Derived from Smarthon IoT board, you can express your creativity on building a smart house for living using in up to 13 cases from simple to IoT level, including smart saving light bulb, and home health data monitoring system in different areas like living room, bedroom, kitchen, toilet, door area etc. The provided full flexible model allows the user to create different styles of the house and add the decoration to the model easily.
 
@@ -45,8 +45,8 @@ basic.showNumber(House.read_distance_sensor(House.DistanceUnit.Centimeters, Digi
 
 ### 3. Show the flame sensor detection result
 The flame sensor will return the detection of fire result<P>
-Detected:TRUE
-Not Detected:FALSE
+Detected:TRUE<BR>
+Not Detected:FALSE<BR>
 
 ```block
 if (House.getFlame(DigitalPin.P0)) {
@@ -57,8 +57,8 @@ if (House.getFlame(DigitalPin.P0)) {
 
 The motion sensor will return the motion changing at the front<P>
 
-Detected change:TRUE
-Not Detected change:FALSE
+Detected change:TRUE<BR>
+Not Detected change:FALSE<BR>
 
 ```block
 if (House.read_motion_sensor(DigitalPin.P0)) {
