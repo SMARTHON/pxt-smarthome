@@ -50,13 +50,13 @@ namespace House {
         //% block="P2"
         b2 = 2,
         //% block="P12"
-        b12 = 12,
+        //b12 = 12,
         //% block="P13"
-        b13 = 13,
+        //b13 = 13,
         //% block="P14"
-        b14 = 14,
+        //b14 = 14,
         //% block="P15"
-        b15 = 15
+        //b15 = 15
     }
 
     export enum ServoSpeed {
@@ -539,7 +539,8 @@ namespace House {
             case PressButtonList.b2:
                 buttonName = DigitalPin.P2
                 break
-            case PressButtonList.b12:
+            /*
+			case PressButtonList.b12:
                 buttonName = DigitalPin.P12
                 break
             case PressButtonList.b13:
@@ -551,6 +552,7 @@ namespace House {
             case PressButtonList.b15:
                 buttonName = DigitalPin.P15
                 break
+			*/
             default:
                 buttonName = DigitalPin.P0
                 break
