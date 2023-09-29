@@ -306,10 +306,10 @@ namespace House {
     /**
      * Read the detection result of motion sensor, return true when something moving, otherwise return false
      */
-    //% blockId=read_motion_sensor
+    //% blockId=read_motion_sensor_home
     //% block="Get motion (triggered or not) at Pin %motion_pin"
     //% weight=40
-    export function read_motion_sensor(motion_pin: DigitalPin): boolean {
+    export function read_motion_sensor_home(motion_pin: DigitalPin): boolean {
         //temp_pin = parseInt(motion_pin.toString())
         temp = pins.digitalReadPin(motion_pin)
         if (temp==1)
@@ -345,12 +345,12 @@ namespace House {
     /**
      * Read the distance data from the ultrasonic distance sensor, can return data in different unit.
      */
-    //% blockId=read_distance_sensor
+    //% blockId=read_distance_sensor_home
     //% block="Get distance unit %unit trig %trig echo %echo"
     //% weight=64
     //% trig.defl=DigitalPin.P14 echo.defl=DigitalPin.P15
     //% inlineInputMode=inline
-    export function read_distance_sensor(unit: DistanceUnit, trig: DigitalPin, echo: DigitalPin, maxCmDistance = 500): number {
+    export function read_distance_sensor_home(unit: DistanceUnit, trig: DigitalPin, echo: DigitalPin, maxCmDistance = 500): number {
         // send pulse
         let d = 10;
         pins.setPull(trig, PinPullMode.PullNone);
