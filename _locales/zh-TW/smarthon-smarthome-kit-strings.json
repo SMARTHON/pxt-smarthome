@@ -29,7 +29,7 @@
   "House.TurnBuzzer|block": "開啟蜂鳴器至強度 %intensity 接口 %pin",
   "House.TurnMotor|block": "開啟風扇馬達至速度 %intensity 接口 %pin",
   "House.Turn180Servo|block": "轉動180度舵機到 %deg 度 接口 %pin",
-  "House.Turn360Servo|block": "%direction %speed 速轉動360度舵機 接口 %pin",
+  "House.Turn360Servo|block": "轉動 360° 舵機 以 %direction 方向|速度 %speed 在 %pin",
   "House.Button|block": "當按鈕接口 %pin 被按下",
   "House|block": "House",
   "{id:category}House": "House",
