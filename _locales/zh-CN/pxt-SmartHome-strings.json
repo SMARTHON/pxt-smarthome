@@ -36,6 +36,6 @@
   "House.read_motion_sensor_home|block": "取得 动作传感器数值 接口 %motion_pin",
   "House|block": "SmartHome",
   "{id:category}House": "House",
-  "{id:group}Temperature and Humidity Sensor (DHT11)": "溫濕度傳感器 (DHT11)",
+  "{id:group}Temperature and Humidity Sensor (DHT11)": "温湿度传感器 (DHT11)",
   "{id:subcategory}More": "更多"
 }
