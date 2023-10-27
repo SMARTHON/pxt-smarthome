@@ -1,6 +1,6 @@
 {
     "name": "pxt-SmartHome",
-    "version": "1.5.1",
+    "version": "1.5.3",
     "description": "This is the extension for SmartHome in PXT",
     "license": "MIT",
     "dependencies": {
@@ -12,9 +12,9 @@
     "files": [
         "README.md",
         "SmartHome.ts",
-        "_locales/zh/smarthon-smartcity-kit-strings.json",
-        "_locales/zh-CN/smarthon-smartcity-kit-strings.json",
-        "_locales/zh-TW/smarthon-smartcity-kit-strings.json"
+        "_locales/zh/smarthon-smarthome-kit-strings.json",
+        "_locales/zh-CN/smarthon-smarthome-kit-strings.json",
+        "_locales/zh-TW/smarthon-smarthome-kit-strings.json"
     ],
     "public": true
 }
