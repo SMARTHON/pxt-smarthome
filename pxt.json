@@ -1,20 +1,21 @@
 {
     "name": "pxt-SmartHome",
-    "version": "1.5.3",
+    "version": "1.5.4",
     "description": "This is the extension for SmartHome in PXT",
     "license": "MIT",
     "dependencies": {
-        "core": "*"	,
-		"smarthon-iotbit" : "github:SMARTHON/pxt-iot-bit",
-		"neopixel": "github:microsoft/pxt-neopixel#v0.7.3"
-		
+        "core": "*"     ,
+				"smarthon-iotbit": "github:SMARTHON/pxt-iot-bit",
+				"neopixel": "github:microsoft/pxt-neopixel#v0.7.3"
+				
     },
     "files": [
         "README.md",
         "SmartHome.ts",
-        "_locales/zh/smarthon-smarthome-kit-strings.json",
-        "_locales/zh-CN/smarthon-smarthome-kit-strings.json",
-        "_locales/zh-TW/smarthon-smarthome-kit-strings.json"
+        "_locales/zh-CN/pxt-SmartHome-jsdoc-strings.json",
+		"_locales/zh-CN/pxt-SmartHome-strings.json",
+        "_locales/zh-TW/pxt-SmartHome-jsdoc-strings.json",
+        "_locales/zh-TW/pxt-SmartHome-strings.json",
     ],
     "public": true
 }
