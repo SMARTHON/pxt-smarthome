@@ -16,7 +16,7 @@
   "House.ServoSpeed.level3|block": "高",
   "House.Temp_degree.degree_Celsius|block": "摄氏",
   "House.Temp_degree.degree_Fahrenheit|block": "华氏",
-  "House.Turn180Servo|block": "轉動180度舵機到 %deg 度 接口 %pin",
+  "House.Turn180Servo|block": "轉動180度舵機到 %degree 度 接口 %pin",
   "House.Turn360Servo|block": "轉動360度舵機 以 %direction 方向|速度 %speed 接口 %pin",
   "House.TurnBuzzer|block": "开启蜂鸣器至强度 %intensity 接口 %pin",
   "House.TurnColorfulLED|block": "开启彩色LED至亮度 %intensity 接口 %pin",

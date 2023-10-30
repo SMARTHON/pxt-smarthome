@@ -1,6 +1,6 @@
 {
     "name": "pxt-SmartHome",
-    "version": "1.5.6",
+    "version": "1.5.7",
     "description": "This is the extension for SmartHome in PXT",
     "license": "MIT",
     "dependencies": {
