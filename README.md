@@ -5,7 +5,8 @@ A PXT library for Smarthon Smart Home IoT Maker kit
 
 ## About Smarthon Smart Home IoT Maker Kit
 
-Smarthon Smart Home IoT Maker Kit for micro:bit is designed to introduce smart home concept implementation of Internet of Things (IoT) into daily life. Derived from Smarthon IoT board, you can express your creativity on building a smart house for living using in up to 13 cases from simple to IoT level, including smart saving light bulb, and home health data monitoring system in different areas like living room, bedroom, kitchen, toilet, door area etc. The provided full flexible model allows the user to create different styles of the house and add the decoration to the model easily.
+Smarthon Smart Home IoT Maker Kit for micro:bit is designed to introduce smart home concept implementation of Internet of Things (IoT) into daily life. Derived from Smarthon IoT board, you can express your creativity on building a smart house for living using in up to 13 cases from simple to IoT level, including smart saving light bulb, and home health data monitoring system in different areas like living room, bedroom, kitchen, toilet, door area etc. The provided full flexible model allows the user to create different styles of the house and add the decoration to the model easily.<P>
+You may check the product information by https://en.smarthon.cc/micro-bit-smart-home-kit
 
 ## Component List
 
