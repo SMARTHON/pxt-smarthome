@@ -309,10 +309,10 @@ namespace House {
     //% blockId=read_motion_sensor_home
     //% block="Get motion (triggered or not) at Pin %motion_pin"
     //% weight=40
-    export function read_motion_sensor_home(motion_pin: DigitalPin): boolean {
-        //temp_pin = parseInt(motion_pin.toString())
-        temp = pins.digitalReadPin(motion_pin)
-        if (temp==1)
+	export function read_motion_sensor_home(motion_pin: AnalogPin): boolean {
+        temp_pin = parseInt(motion_pin.toString())
+        temp = pins.analogReadPin(temp_pin)
+        if (temp > 800)
             return true
         else return false
     }
