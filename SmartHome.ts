@@ -3,75 +3,76 @@
  */
 //% weight=98 color=#ffba52 icon="\uf015" block="SmartHome"
 namespace House {
-    let light_variable = 0
-    let temperature_variable = 0
-    let humidity_variable = 0
-    let heat_variable = 0
-    let button_variable = 0
-    let motion_variable = 0
-    let flame_variable
-    let towngas_variable = 0
-    let temp_IAQ = 0
-    let hum_IAQ = 0
-    let temp_pin = 0
-    let temp = 0
-    let _temperature: number = -999.0
-    let _humidity: number = -999.0
-    let _readSuccessful: boolean = false
-    let _firsttime: boolean = true
-    let _last_successful_query_temperature: number = 0
-    let _last_successful_query_humidity: number = 0
-
+    let lightVariable = 0;
+    let temperatureVariable = 0;
+    let humidityVariable = 0;
+    let heatVariable = 0;
+    let buttonVariable = 0;
+    let motionVariable = 0;
+    let flameVariable = 0;
+    let towngasVariable = 0;
+    let tempIaq = 0;
+    let humIaq = 0;
+    let tempPin = 0;
+    let temp = 0;
+    let temperature = -999.0;
+    let humidity = -999.0;
+    let readSuccessful = false;
+    let firstTime = true;
+    let lastSuccessfulQueryTemperature = 0;
+    let lastSuccessfulQueryHumidity = 0;
 
     export enum ServoDirection {
         //% block="clockwise"
-        clockwise,
+        Clockwise,
         //% block="anti-clockwise"
-        anticlockwise
+        Anticlockwise
     }
-    export enum Temp_degree {
+
+    export enum TempDegree {
         //% block="°C"
-        degree_Celsius,
+        DegreeCelsius,
         //% block="°F"
-        degree_Fahrenheit
+        DegreeFahrenheit
     }
-    export enum DHT11dataType {
+
+    export enum Dht11DataType {
         //% block="temperature"
-        temperature,
+        Temperature,
         //% block="humidity"
-        humidity
+        Humidity
     }
 
     export enum PressButtonList {
         //% block="P0"
-        b0 = 0,
+        B0 = 0,
         //% block="P1"
-        b1 = 1,
+        B1 = 1,
         //% block="P2"
-        b2 = 2,
+        B2 = 2,
         //% block="P12"
-        //b12 = 12,
+        //B12 = 12,
         //% block="P13"
-        //b13 = 13,
+        //B13 = 13,
         //% block="P14"
-        //b14 = 14,
+        //B14 = 14,
         //% block="P15"
-        //b15 = 15
+        //B15 = 15
     }
 
     export enum ServoSpeed {
         //% blockId=servo360_level_0
         //% block="Stop"
-        level0 = 0,
+        Level0 = 0,
         //% blockId=servo360_level_1
         //% block="Level 1"
-        level1 = 1,
+        Level1 = 1,
         //% blockId=servo360_level_2
         //% block="Level 2"
-        level2 = 2,
+        Level2 = 2,
         //% blockId=servo360_level_3
         //% block="Level 3"
-        level3 = 3
+        Level3 = 3
     }
 
     export enum DistanceUnit {
@@ -83,88 +84,77 @@ namespace House {
         MicroSeconds
     }
 
-
     /**
-     * Read the light intensity (in percentage) result form light sensor
+     * Read the light intensity (in percentage) result from light sensor
      */
     //% blockId="smarthon_get_light_house" 
     //% block="Get light value (percentage) at Pin %pin"
     //% weight=65	
-
     export function getLight(pin: AnalogPin): number {
-        light_variable = Math.round(pins.map(
+        lightVariable = Math.round(pins.map(
             pins.analogReadPin(pin),
             0,
             1023,
             0,
             100
         ));
-        return light_variable;
+        return lightVariable;
     }
 
-
     //% block="Get DHT11 at Pin %dataPin|"
-    function dht11_queryData(dataPin: DigitalPin) {
-
-        if (_firsttime == true) {
-            _firsttime = false
-            dht11_queryData(dataPin)
+    function dht11QueryData(dataPin: DigitalPin) {
+        if (firstTime) {
+            firstTime = false;
+            dht11QueryData(dataPin);
         }
 
-        //initialize
-        let startTime: number = 0
-        let endTime: number = 0
-        let checksum: number = 0
-        let checksumTmp: number = 0
-        let dataArray: boolean[] = []
-        let resultArray: number[] = []
-        for (let index = 0; index < 40; index++) dataArray.push(false)
-        for (let index = 0; index < 5; index++) resultArray.push(0)
-        _humidity = 0
-        _temperature = 0
-        _readSuccessful = false
+        // Initialize
+        let startTime = 0;
+        let endTime = 0;
+        let checksum = 0;
+        let checksumTmp = 0;
+        let dataArray: boolean[] = [];
+        let resultArray: number[] = [];
+        for (let index = 0; index < 40; index++) dataArray.push(false);
+        for (let index = 0; index < 5; index++) resultArray.push(0);
+        humidity = 0;
+        temperature = 0;
+        readSuccessful = false;
 
-        //request data
-        pins.digitalWritePin(dataPin, 0) //begin protocol
-        control.waitMicros(18000)
-        pins.setPull(dataPin, PinPullMode.PullUp) //pull up data pin if needed
-        pins.digitalReadPin(dataPin)
-        control.waitMicros(40)
+        // Request data
+        pins.digitalWritePin(dataPin, 0); // Begin protocol
+        control.waitMicros(18000);
+        pins.setPull(dataPin, PinPullMode.PullUp); // Pull up data pin if needed
+        pins.digitalReadPin(dataPin);
+        control.waitMicros(40);
         if (pins.digitalReadPin(dataPin) == 1) {
-            //if no respone,exit the loop to avoid Infinity loop
-            pins.setPull(dataPin, PinPullMode.PullNone) //release pull up
-        }
-        else {
-            pins.setPull(dataPin, PinPullMode.PullNone) //release pull up
+			//if no respone,exit the loop to avoid Infinity loop
+            pins.setPull(dataPin, PinPullMode.PullNone); // Release pull up
+        } else {
+            pins.setPull(dataPin, PinPullMode.PullNone); // Release pull up
 
-            while (pins.digitalReadPin(dataPin) == 0); //sensor response
-            while (pins.digitalReadPin(dataPin) == 1); //sensor response
+            while (pins.digitalReadPin(dataPin) == 0); // Sensor response
+            while (pins.digitalReadPin(dataPin) == 1); // Sensor response
 
-            //-------------V2---------------------------------
-            //read data (5 bytes)
-            if (control.ramSize() > 20000) {
-                for (let index = 0; index < 40; index++) {
-                    startTime = input.runningTimeMicros()
-                    while (pins.digitalReadPin(dataPin) == 1) {
-                        endTime = input.runningTimeMicros()
-                        if ((endTime - startTime) > 150) {
-                            //OLED.writeStringNewLine("break")
-                            break;
-                        }
-                    };
-                    while (pins.digitalReadPin(dataPin) == 0) {
-                        endTime = input.runningTimeMicros()
-                        if ((endTime - startTime) > 150) {
-                            //OLED.writeStringNewLine("break")
-                            break;
-                        }
-                    };
-                    control.waitMicros(28)
-                    //if sensor pull up data pin for more than 28 us it means 1, otherwise 0
-                    if (pins.digitalReadPin(dataPin) == 1) dataArray[index] = true
-                }
-            }
-            //-------------------V1------------------------
+			//-------------V2---------------------------------
+            // Read data (5 bytes)
+			if (control.ramSize() > 20000) {
+				for (let index = 0; index < 40; index++) {
+					startTime = input.runningTimeMicros();
+					while (pins.digitalReadPin(dataPin) == 1) {
+						endTime = input.runningTimeMicros();
+						if ((endTime - startTime) > 150) break;
+					}
+					while (pins.digitalReadPin(dataPin) == 0) {
+						endTime = input.runningTimeMicros();
+						if ((endTime - startTime) > 150) break;
+					}
+					control.waitMicros(28);
+					//if sensor pull up data pin for more than 28 us it means 1, otherwise 0
+					if (pins.digitalReadPin(dataPin) == 1) dataArray[index] = true;
+				}
+			}
+			//-------------------V1------------------------
             else if (control.ramSize() < 20000) {
                 for (let index = 0; index < 40; index++) {
                     while (pins.digitalReadPin(dataPin) == 1);
@@ -174,68 +164,57 @@ namespace House {
                     if (pins.digitalReadPin(dataPin) == 1) dataArray[index] = true
                 }
             }
+			
 
-
-            //convert byte number array to integer
+            // Convert byte number array to integer
             for (let index = 0; index < 5; index++)
                 for (let index2 = 0; index2 < 8; index2++)
-                    if (dataArray[8 * index + index2]) resultArray[index] += 2 ** (7 - index2)
+                    if (dataArray[8 * index + index2]) resultArray[index] += 2 ** (7 - index2);
 
-            //verify checksum
-            checksumTmp = resultArray[0] + resultArray[1] + resultArray[2] + resultArray[3]
-            checksum = resultArray[4]
-            if (checksumTmp >= 512) checksumTmp -= 512
-            if (checksumTmp >= 256) checksumTmp -= 256
-            if (checksum == checksumTmp) _readSuccessful = true
+            // Verify checksum
+            checksumTmp = resultArray[0] + resultArray[1] + resultArray[2] + resultArray[3];
+            checksum = resultArray[4];
+            if (checksumTmp >= 512) checksumTmp -= 512;
+            if (checksumTmp >= 256) checksumTmp -= 256;
+            if (checksum == checksumTmp) readSuccessful = true;
 
-            //set data variable if checksum ok
-            if (_readSuccessful) {
-                //OLED.writeStringNewLine("success")
-                _humidity = resultArray[0] + resultArray[1] / 100
-                _temperature = resultArray[2] + resultArray[3] / 100
-                _last_successful_query_humidity = _humidity
-                _last_successful_query_temperature = _temperature
+            // Set data variable if checksum ok
+            if (readSuccessful) {
+                humidity = resultArray[0] + resultArray[1] / 100;
+                temperature = resultArray[2] + resultArray[3] / 100;
+                lastSuccessfulQueryHumidity = humidity;
+                lastSuccessfulQueryTemperature = temperature;
             } else {
-                //OLED.writeStringNewLine("fail")
-                _humidity = _last_successful_query_humidity
-                _temperature = _last_successful_query_temperature
+                humidity = lastSuccessfulQueryHumidity;
+                temperature = lastSuccessfulQueryTemperature;
             }
-
         }
-        //wait 1.5 sec after query 
-        basic.pause(1500)
+        // Wait 1.5 sec after query 
+        basic.pause(1500);
     }
 
-
     /**
-     * Query the temperature and humidity infromation from DHT11 Temperature and Humidity sensor
-     *  
+     * Query the temperature and humidity information from DHT11 Temperature and Humidity sensor
      */
-    //% block="Read Temperature & Humidity Sensor at pin %dht11pin|"
+    //% block="Read Temperature & Humidity Sensor at pin %dht11Pin|"
     //% weight=90
     //% group="Temperature and Humidity Sensor (DHT11)"
     //% blockGap=12
-    export function readDHT11(dht11pin: DigitalPin): void {
-        // querydata
-        dht11_queryData(dht11pin)
+    export function readDht11(dht11Pin: DigitalPin): void {
+        dht11QueryData(dht11Pin);
     }
-
-
 
     /**
      * Get the Temperature value (degree in Celsius or Fahrenheit) after queried the Temperature and Humidity sensor
      */
-
-    //% block="Get Temperature |%temp_degree"
+    //% block="Get Temperature |%tempDegree"
     //% weight=79
     //% group="Temperature and Humidity Sensor (DHT11)"
-    export function readTemperatureData(temp_degree: Temp_degree): number {
-        // querydata
-        if (temp_degree == Temp_degree.degree_Celsius) {
-            return Math.round(_last_successful_query_temperature)
-        }
-        else {
-            return Math.round((_last_successful_query_temperature * 1.8) + 32)
+    export function readTemperatureData(tempDegree: TempDegree): number {
+        if (tempDegree == TempDegree.DegreeCelsius) {
+            return Math.round(lastSuccessfulQueryTemperature);
+        } else {
+            return Math.round((lastSuccessfulQueryTemperature * 1.8) + 32);
         }
     }
 
@@ -246,13 +225,8 @@ namespace House {
     //% weight=78
     //% group="Temperature and Humidity Sensor (DHT11)"
     export function readHumidityData(): number {
-        // querydata
-
-        return Math.round(_last_successful_query_humidity)
-
-
+        return Math.round(lastSuccessfulQueryHumidity);
     }
-
 
     /**
      * Basic on the temperature and humidity to calculate the IAQ score, detail can refer to online documentation
@@ -263,29 +237,26 @@ namespace House {
     //% group="Temperature and Humidity Sensor (DHT11)"
     export function getIAQ(): number {
 
-        let t = Math.round(_last_successful_query_temperature)
-        let h = _last_successful_query_humidity
+        let t = Math.round(lastSuccessfulQueryTemperature)
+        let h = lastSuccessfulQueryHumidity
         //OLED.writeNumNewLine(t)
         //OLED.writeNumNewLine(h)
         //get temp_IAQ
-        if (t < 1 || t > 36) { temp_IAQ = 0 }
-        else if ((t >= 1 && t <= 5) || (t >= 34 && t <= 36)) { temp_IAQ = 20 }
-        else if ((t >= 6 && t <= 10) || (t >= 29 && t <= 33)) { temp_IAQ = 40 }
-        else if ((t >= 11 && t <= 16) || (t >= 26 && t <= 28)) { temp_IAQ = 60 }
-        else if ((t >= 17 && t <= 19) || (t >= 23 && t <= 25)) { temp_IAQ = 80 }
-        else if ((t >= 20 && t <= 22)) { temp_IAQ = 100 }
+        if (t < 1 || t > 36) { tempIaq = 0 }
+        else if ((t >= 1 && t <= 5) || (t >= 34 && t <= 36)) { tempIaq = 20 }
+        else if ((t >= 6 && t <= 10) || (t >= 29 && t <= 33)) { tempIaq = 40 }
+        else if ((t >= 11 && t <= 16) || (t >= 26 && t <= 28)) { tempIaq = 60 }
+        else if ((t >= 17 && t <= 19) || (t >= 23 && t <= 25)) { tempIaq = 80 }
+        else if ((t >= 20 && t <= 22)) { tempIaq = 100 }
         //get hum_IAQ
-        if (h < 20 || h > 90) { hum_IAQ = 0 }
-        else if ((h >= 20 && h <= 29) || (h >= 86 && h <= 90)) { hum_IAQ = 20 }
-        else if ((h >= 30 && h <= 39) || (h >= 80 && h <= 85)) { hum_IAQ = 40 }
-        else if ((h >= 40 && h <= 49) || (h >= 76 && h <= 79)) { hum_IAQ = 60 }
-        else if ((h >= 50 && h <= 59) || (h >= 71 && h <= 75)) { hum_IAQ = 80 }
-        else if ((h >= 60 && h <= 70)) { hum_IAQ = 100 }
+        if (h < 20 || h > 90) { humIaq = 0 }
+        else if ((h >= 20 && h <= 29) || (h >= 86 && h <= 90)) { humIaq = 20 }
+        else if ((h >= 30 && h <= 39) || (h >= 80 && h <= 85)) { humIaq = 40 }
+        else if ((h >= 40 && h <= 49) || (h >= 76 && h <= 79)) { humIaq = 60 }
+        else if ((h >= 50 && h <= 59) || (h >= 71 && h <= 75)) { humIaq = 80 }
+        else if ((h >= 60 && h <= 70)) { humIaq = 100 }
 
-        return Math.round((temp_IAQ + hum_IAQ) / 2)
-
-
-
+        return Math.round((tempIaq + humIaq) / 2)
     }
 
     //% blockId="smarthon_get_heat" 
@@ -301,8 +272,6 @@ namespace House {
         return 0;
     }
 
-
-
     /**
      * Read the detection result of motion sensor, return true when something moving, otherwise return false
      */
@@ -310,8 +279,8 @@ namespace House {
     //% block="Get motion (triggered or not) at Pin %motion_pin"
     //% weight=40
 	export function read_motion_sensor_home(motion_pin: AnalogPin): boolean {
-        temp_pin = parseInt(motion_pin.toString())
-        temp = pins.analogReadPin(temp_pin)
+        tempPin = parseInt(motion_pin.toString())
+        temp = pins.analogReadPin(tempPin)
         if (temp > 800)
             return true
         else return false
@@ -324,8 +293,8 @@ namespace House {
     //% block="Get flame detection at Pin %pin"
     //% weight=45	
     export function getFlame(pin: DigitalPin): boolean {
-        flame_variable = pins.digitalReadPin(pin)
-        if (flame_variable == 1) {
+        flameVariable = pins.digitalReadPin(pin)
+        if (flameVariable == 1) {
             return true;
         }
         else { return false; }
@@ -336,11 +305,9 @@ namespace House {
     //% blockHidden=true
 
     export function getTownGas(pin: AnalogPin): number {
-        towngas_variable = pins.analogReadPin(pin);
-        return towngas_variable;
-
+        towngasVariable = pins.analogReadPin(pin);
+        return towngasVariable;
     }
-
 
     /**
      * Read the distance data from the ultrasonic distance sensor, can return data in different unit.
@@ -381,10 +348,8 @@ namespace House {
     //%subcategory=More
     //% blockHidden=true
     export function TurnColorfulLED(intensity: number, pin: AnalogPin): void {
-
         pins.analogWritePin(pin, intensity);
     }
-
 
     //% blockId="smarthon_red_LED"
     //% block="Set Red LED to intensity %intensity at %pin"
@@ -392,9 +357,7 @@ namespace House {
     //% weight=49
     //%subcategory=More
     //% blockHidden=true
-
     export function TurnRedLED(intensity: number, pin: AnalogPin): void {
-
         pins.analogWritePin(pin, intensity);
     }
 
@@ -404,9 +367,7 @@ namespace House {
     //% weight=48
     //%subcategory=More
     //% blockHidden=true
-
     export function TurnGreenLED(intensity: number, pin: AnalogPin): void {
-
         pins.analogWritePin(pin, intensity);
     }
 
@@ -416,10 +377,7 @@ namespace House {
     //% weight=47
     //%subcategory=More
     //% blockHidden=true
-
-
     export function TurnYellowLED(intensity: number, pin: AnalogPin): void {
-
         pins.analogWritePin(pin, intensity);
     }
 
@@ -432,12 +390,9 @@ namespace House {
     //% weight=46
     //%subcategory=More	
     //% blockHidden=true
-
     export function TurnBuzzer(intensity: number, pin: AnalogPin): void {
-
         pins.analogWritePin(pin, intensity);
     }
-
 
     /**
      * Control the Motor to spin with specific speed
@@ -448,25 +403,19 @@ namespace House {
     //% pin1.defl=AnalogPin.P1
     //% weight=45	
     //%subcategory=More
-
     export function TurnMotor(intensity: number, pin1: AnalogPin): void {
         pins.analogWritePin(pin1, intensity);
     }
 
-
-
     /**
     *  Control the 180 degree servo to specific angle
     */
-
     //% blockId="smarthon_180_servo"
     //% block="Turn 180° Servo to %degree degree at %pin"
     //% intensity.min=0 intensity.max=180
     //% weight=43
     //%subcategory=More	
-
     export function Turn180Servo(intensity: number, pin: AnalogPin): void {
-
         pins.servoWritePin(pin, intensity)
     }
 
@@ -474,45 +423,40 @@ namespace House {
      * Control the 360 degree servo to rotate with direction and Speed
      * 
      */
-
     //% blockId="smarthon_360_servo"
     //% block="Turn 360° Servo with %direction direction|speed %speed at %pin"
     //% weight=42
     //%subcategory=More
-
     export function Turn360Servo(direction: ServoDirection, speed: ServoSpeed, pin: AnalogPin): void {
-
         switch (direction) {
-
-            case ServoDirection.clockwise:
+            case ServoDirection.Clockwise:
                 switch (speed) {
-                    case ServoSpeed.level0:
+                    case ServoSpeed.Level0:
                         pins.servoWritePin(pin, 90)
                         break
-                    case ServoSpeed.level1:
+                    case ServoSpeed.Level1:
                         pins.servoWritePin(pin, 83)
                         break
-                    case ServoSpeed.level2:
+                    case ServoSpeed.Level2:
                         pins.servoWritePin(pin, 82)
                         break
-                    case ServoSpeed.level3:
+                    case ServoSpeed.Level3:
                         pins.servoWritePin(pin, 80)
                         break
                 }
                 break
-
-            case ServoDirection.anticlockwise:
+            case ServoDirection.Anticlockwise:
                 switch (speed) {
-                    case ServoSpeed.level0:
+                    case ServoSpeed.Level0:
                         pins.servoWritePin(pin, 90)
                         break
-                    case ServoSpeed.level1:
+                    case ServoSpeed.Level1:
                         pins.servoWritePin(pin, 96)
                         break
-                    case ServoSpeed.level2:
+                    case ServoSpeed.Level2:
                         pins.servoWritePin(pin, 97)
                         break
-                    case ServoSpeed.level3:
+                    case ServoSpeed.Level3:
                         pins.servoWritePin(pin, 98)
                         break
                 }
@@ -523,20 +467,19 @@ namespace House {
     /**
      * When the Pin is pressed, it will trigger the function inside the block
      */
-
     //% blockId="button" 
     //% block="When Button at %pin pressed"	 
     //% weight=10
     export function Button(pin: PressButtonList, handler: () => void) {
         let buttonName;
         switch (pin) {
-            case PressButtonList.b0:
+            case PressButtonList.B0:
                 buttonName = DigitalPin.P0
                 break
-            case PressButtonList.b1:
+            case PressButtonList.B1:
                 buttonName = DigitalPin.P1
                 break
-            case PressButtonList.b2:
+            case PressButtonList.B2:
                 buttonName = DigitalPin.P2
                 break
             /*
@@ -560,5 +503,4 @@ namespace House {
 
         pins.onPulsed(buttonName, PulseValue.High, handler)
     }
-
 }
