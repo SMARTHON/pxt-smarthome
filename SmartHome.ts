@@ -1,5 +1,6 @@
 /**
- * Custom blocks
+ * Sensor block
+ * SmartHome expansion module for Micro:bit
  */
 //% weight=98 color=#ffba52 icon="\uf015" block="SmartHome"
 namespace House {
@@ -86,6 +87,7 @@ namespace House {
 
     /**
      * Read the light intensity (in percentage) result from light sensor
+     * @param pin to get the analog value from pin
      */
     //% blockId=smarthon_get_light_house
     //% block="get light value (percentage) at pin %pin"
@@ -128,7 +130,7 @@ namespace House {
         pins.digitalReadPin(dataPin);
         control.waitMicros(40);
         if (pins.digitalReadPin(dataPin) == 1) {
-			//if no respone,exit the loop to avoid Infinity loop
+            //if no respone,exit the loop to avoid Infinity loop
             pins.setPull(dataPin, PinPullMode.PullNone); // Release pull up
         } else {
             pins.setPull(dataPin, PinPullMode.PullNone); // Release pull up
@@ -136,25 +138,25 @@ namespace House {
             while (pins.digitalReadPin(dataPin) == 0); // Sensor response
             while (pins.digitalReadPin(dataPin) == 1); // Sensor response
 
-			//-------------V2---------------------------------
+            //-------------V2---------------------------------
             // Read data (5 bytes)
-			if (control.ramSize() > 20000) {
-				for (let index = 0; index < 40; index++) {
-					startTime = input.runningTimeMicros();
-					while (pins.digitalReadPin(dataPin) == 1) {
-						endTime = input.runningTimeMicros();
-						if ((endTime - startTime) > 150) break;
-					}
-					while (pins.digitalReadPin(dataPin) == 0) {
-						endTime = input.runningTimeMicros();
-						if ((endTime - startTime) > 150) break;
-					}
-					control.waitMicros(28);
-					//if sensor pull up data pin for more than 28 us it means 1, otherwise 0
-					if (pins.digitalReadPin(dataPin) == 1) dataArray[index] = true;
-				}
-			}
-			//-------------------V1------------------------
+            if (control.ramSize() > 20000) {
+                for (let index = 0; index < 40; index++) {
+                    startTime = input.runningTimeMicros();
+                    while (pins.digitalReadPin(dataPin) == 1) {
+                        endTime = input.runningTimeMicros();
+                        if ((endTime - startTime) > 150) break;
+                    }
+                    while (pins.digitalReadPin(dataPin) == 0) {
+                        endTime = input.runningTimeMicros();
+                        if ((endTime - startTime) > 150) break;
+                    }
+                    control.waitMicros(28);
+                    //if sensor pull up data pin for more than 28 us it means 1, otherwise 0
+                    if (pins.digitalReadPin(dataPin) == 1) dataArray[index] = true;
+                }
+            }
+            //-------------------V1------------------------
             else if (control.ramSize() < 20000) {
                 for (let index = 0; index < 40; index++) {
                     while (pins.digitalReadPin(dataPin) == 1);
@@ -164,7 +166,7 @@ namespace House {
                     if (pins.digitalReadPin(dataPin) == 1) dataArray[index] = true
                 }
             }
-			
+
 
             // Convert byte number array to integer
             for (let index = 0; index < 5; index++)
@@ -195,6 +197,7 @@ namespace House {
 
     /**
      * Query the temperature and humidity information from DHT11 Temperature and Humidity sensor
+     * @param dht11Pin Digital Read dht data
      */
     //% block="read temperature & humidity sensor at pin %dht11Pin|"
     //% weight=90
@@ -206,6 +209,7 @@ namespace House {
 
     /**
      * Get the Temperature value (degree in Celsius or Fahrenheit) after queried the Temperature and Humidity sensor
+     * @param tempDegree is the number of temperature
      */
     //% block="get temperature |%tempDegree"
     //% weight=79
@@ -274,11 +278,12 @@ namespace House {
 
     /**
      * Read the detection result of motion sensor, return true when something moving, otherwise return false
+     * @param motion_pin is the motion changing at the front
      */
     //% blockId=read_motion_sensor_home
     //% block="get motion (triggered or not) at pin %motion_pin"
     //% weight=40
-	export function read_motion_sensor_home(motion_pin: AnalogPin): boolean {
+    export function read_motion_sensor_home(motion_pin: AnalogPin): boolean {
         tempPin = parseInt(motion_pin.toString())
         temp = pins.analogReadPin(tempPin)
         if (temp > 800)
@@ -288,6 +293,7 @@ namespace House {
 
     /** 
      * Read the detection result of flame sensor, return true when detect flame, otherwise return false
+     * @param pin is read the flame sensor pin
      */
     //% blockId=smarthon_get_flame
     //% block="get flame detection at pin %pin"
@@ -311,6 +317,10 @@ namespace House {
 
     /**
      * Read the distance data from the ultrasonic distance sensor, can return data in different unit.
+     * @param unit the distance unit eg: cm or inches
+     * @param trig tragger to send the ultrasonic signal
+     * @param echo tragger to receive the ultrasonic signal
+     * @param maxCmDistance is the maximum distance can be detected
      */
     //% blockId=read_distance_sensor_home
     //% block="get distance unit %unit trig %trig echo %echo"
@@ -340,6 +350,11 @@ namespace House {
         }
     }
 
+    /**
+     * change the light intensity
+     * @param intensity the intensity of light
+     * @param pin the pin of light
+     */
     //% blockId=smarthon_colorful_led
     //% block="turn colorful LED to %intensity at %pin"
     //% intensity.min=0 intensity.max=1023
@@ -383,6 +398,7 @@ namespace House {
 
     /**
      *  Turn on mono tone Buzzer to make the noise
+     *  @param intensity change the intensity of Buzzer noise
      */
     //% blockId=smarthon_buzzer
     //% block="set buzzer to intensity %intensity at %pin"
@@ -396,6 +412,7 @@ namespace House {
 
     /**
      * Control the Motor to spin with specific speed
+     * @param intensity change the intensity of Motor speed
      */
     //% blockId=smarthon_motorfan
     //% block="set motor fan with speed %intensity at %pin1"
@@ -408,7 +425,8 @@ namespace House {
     }
 
     /**
-    *  Control the 180 degree servo to specific angle
+    * Control the 180 degree servo to specific angle
+    * @param intensity is the servo turning to the angle
     */
     //% blockId=smarthon_180_servo
     //% block="turn 180° servo to %degree degree at %pin"
@@ -421,7 +439,9 @@ namespace House {
 
     /**
      * Control the 360 degree servo to rotate with direction and Speed
-     * 
+     * @param direction clockwise or anti-clockwise
+     * @param speed how fast the servo turning
+     * @param pin is control the servo pin
      */
     //% blockId=smarthon_360_servo
     //% block="turn 360° servo with %direction direction|speed %speed at %pin"
@@ -466,6 +486,7 @@ namespace House {
 
     /**
      * When the Pin is pressed, it will trigger the function inside the block
+     * @param pin is read the button state
      */
     //% blockId=button
     //% block="when button at %pin pressed"	 
@@ -483,7 +504,7 @@ namespace House {
                 buttonName = DigitalPin.P2
                 break
             /*
-			case PressButtonList.b12:
+            case PressButtonList.b12:
                 buttonName = DigitalPin.P12
                 break
             case PressButtonList.b13:
@@ -495,7 +516,7 @@ namespace House {
             case PressButtonList.b15:
                 buttonName = DigitalPin.P15
                 break
-			*/
+            */
             default:
                 buttonName = DigitalPin.P0
                 break
