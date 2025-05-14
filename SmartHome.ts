@@ -87,8 +87,8 @@ namespace House {
     /**
      * Read the light intensity (in percentage) result from light sensor
      */
-    //% blockId="smarthon_get_light_house" 
-    //% block="Get light value (percentage) at Pin %pin"
+    //% blockId=smarthon_get_light_house
+    //% block="get light value (percentage) at pin %pin"
     //% weight=65	
     export function getLight(pin: AnalogPin): number {
         lightVariable = Math.round(pins.map(
@@ -101,7 +101,7 @@ namespace House {
         return lightVariable;
     }
 
-    //% block="Get DHT11 at Pin %dataPin|"
+    //% block="get DHT11 at Pin %dataPin|"
     function dht11QueryData(dataPin: DigitalPin) {
         if (firstTime) {
             firstTime = false;
@@ -196,7 +196,7 @@ namespace House {
     /**
      * Query the temperature and humidity information from DHT11 Temperature and Humidity sensor
      */
-    //% block="Read Temperature & Humidity Sensor at pin %dht11Pin|"
+    //% block="read temperature & humidity sensor at pin %dht11Pin|"
     //% weight=90
     //% group="Temperature and Humidity Sensor (DHT11)"
     //% blockGap=12
@@ -207,7 +207,7 @@ namespace House {
     /**
      * Get the Temperature value (degree in Celsius or Fahrenheit) after queried the Temperature and Humidity sensor
      */
-    //% block="Get Temperature |%tempDegree"
+    //% block="get temperature |%tempDegree"
     //% weight=79
     //% group="Temperature and Humidity Sensor (DHT11)"
     export function readTemperatureData(tempDegree: TempDegree): number {
@@ -221,7 +221,7 @@ namespace House {
     /**
      * Get the humidity value (in percentage) after queried the Temperature and Humidity sensor
      */
-    //% block="Get Humidity"
+    //% block="get humidity"
     //% weight=78
     //% group="Temperature and Humidity Sensor (DHT11)"
     export function readHumidityData(): number {
@@ -231,8 +231,8 @@ namespace House {
     /**
      * Basic on the temperature and humidity to calculate the IAQ score, detail can refer to online documentation
      */
-    //% blockId="smarthon_get_IAQ" 
-    //% block="Get IAQ Score"
+    //% blockId=smarthon_get_IAQ
+    //% block="get IAQ score"
     //% weight=77		
     //% group="Temperature and Humidity Sensor (DHT11)"
     export function getIAQ(): number {
@@ -259,8 +259,8 @@ namespace House {
         return Math.round((tempIaq + humIaq) / 2)
     }
 
-    //% blockId="smarthon_get_heat" 
-    //% block="Get heat (index) at %pin"
+    //% blockId=smarthon_get_heat
+    //% block="get heat (index) at %pin"
     //% weight=77		
     //% blockHidden=true
 
@@ -276,7 +276,7 @@ namespace House {
      * Read the detection result of motion sensor, return true when something moving, otherwise return false
      */
     //% blockId=read_motion_sensor_home
-    //% block="Get motion (triggered or not) at Pin %motion_pin"
+    //% block="get motion (triggered or not) at pin %motion_pin"
     //% weight=40
 	export function read_motion_sensor_home(motion_pin: AnalogPin): boolean {
         tempPin = parseInt(motion_pin.toString())
@@ -289,8 +289,8 @@ namespace House {
     /** 
      * Read the detection result of flame sensor, return true when detect flame, otherwise return false
      */
-    //% blockId="smarthon_get_flame" 
-    //% block="Get flame detection at Pin %pin"
+    //% blockId=smarthon_get_flame
+    //% block="get flame detection at pin %pin"
     //% weight=45	
     export function getFlame(pin: DigitalPin): boolean {
         flameVariable = pins.digitalReadPin(pin)
@@ -299,8 +299,8 @@ namespace House {
         }
         else { return false; }
     }
-    //% blockId="smarthon_get_towngas" 
-    //% block="Get town gas value (intensity) at %pin"
+    //% blockId=smarthon_get_towngas
+    //% block="get town gas value (intensity) at %pin"
     //% weight=73
     //% blockHidden=true
 
@@ -313,7 +313,7 @@ namespace House {
      * Read the distance data from the ultrasonic distance sensor, can return data in different unit.
      */
     //% blockId=read_distance_sensor_home
-    //% block="Get distance unit %unit trig %trig echo %echo"
+    //% block="get distance unit %unit trig %trig echo %echo"
     //% weight=64
     //% trig.defl=DigitalPin.P14 echo.defl=DigitalPin.P15
     //% inlineInputMode=inline
@@ -340,8 +340,8 @@ namespace House {
         }
     }
 
-    //% blockId="smarthon_colorful_led"
-    //% block="Turn Colorful LED to %intensity at %pin"
+    //% blockId=smarthon_colorful_led
+    //% block="turn colorful LED to %intensity at %pin"
     //% intensity.min=0 intensity.max=1023
     //% pin.defl=AnalogPin.P0
     //% weight=50
@@ -351,8 +351,8 @@ namespace House {
         pins.analogWritePin(pin, intensity);
     }
 
-    //% blockId="smarthon_red_LED"
-    //% block="Set Red LED to intensity %intensity at %pin"
+    //% blockId=smarthon_red_LED
+    //% block="set red LED to intensity %intensity at %pin"
     //% intensity.min=0 intensity.max=1023
     //% weight=49
     //%subcategory=More
@@ -361,8 +361,8 @@ namespace House {
         pins.analogWritePin(pin, intensity);
     }
 
-    //% blockId="smarthon_green_LED"
-    //% block="Set Green LED to intensity %intensity at %pin"
+    //% blockId=smarthon_green_LED
+    //% block="set green LED to intensity %intensity at %pin"
     //% intensity.min=0 intensity.max=1023
     //% weight=48
     //%subcategory=More
@@ -371,8 +371,8 @@ namespace House {
         pins.analogWritePin(pin, intensity);
     }
 
-    //% blockId="smarthon_yellow_LED"
-    //% block="Set Yellow LED to intensity %intensity at %pin"
+    //% blockId=smarthon_yellow_LED
+    //% block="set yellow LED to intensity %intensity at %pin"
     //% intensity.min=0 intensity.max=1023
     //% weight=47
     //%subcategory=More
@@ -384,8 +384,8 @@ namespace House {
     /**
      *  Turn on mono tone Buzzer to make the noise
      */
-    //% blockId="smarthon_buzzer"
-    //% block="Set Buzzer to intensity %intensity at %pin"
+    //% blockId=smarthon_buzzer
+    //% block="set buzzer to intensity %intensity at %pin"
     //% intensity.min=0 intensity.max=1023
     //% weight=46
     //%subcategory=More	
@@ -397,8 +397,8 @@ namespace House {
     /**
      * Control the Motor to spin with specific speed
      */
-    //% blockId="smarthon_motorfan"
-    //% block="Set Motor fan with speed %intensity at %pin1"
+    //% blockId=smarthon_motorfan
+    //% block="set motor fan with speed %intensity at %pin1"
     //% intensity.min=0 intensity.max=1023
     //% pin1.defl=AnalogPin.P1
     //% weight=45	
@@ -410,8 +410,8 @@ namespace House {
     /**
     *  Control the 180 degree servo to specific angle
     */
-    //% blockId="smarthon_180_servo"
-    //% block="Turn 180° Servo to %degree degree at %pin"
+    //% blockId=smarthon_180_servo
+    //% block="turn 180° servo to %degree degree at %pin"
     //% intensity.min=0 intensity.max=180
     //% weight=43
     //%subcategory=More	
@@ -423,8 +423,8 @@ namespace House {
      * Control the 360 degree servo to rotate with direction and Speed
      * 
      */
-    //% blockId="smarthon_360_servo"
-    //% block="Turn 360° Servo with %direction direction|speed %speed at %pin"
+    //% blockId=smarthon_360_servo
+    //% block="turn 360° servo with %direction direction|speed %speed at %pin"
     //% weight=42
     //%subcategory=More
     export function Turn360Servo(direction: ServoDirection, speed: ServoSpeed, pin: AnalogPin): void {
@@ -467,8 +467,8 @@ namespace House {
     /**
      * When the Pin is pressed, it will trigger the function inside the block
      */
-    //% blockId="button" 
-    //% block="When Button at %pin pressed"	 
+    //% blockId=button
+    //% block="when button at %pin pressed"	 
     //% weight=10
     export function Button(pin: PressButtonList, handler: () => void) {
         let buttonName;
