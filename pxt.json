@@ -17,5 +17,8 @@
         "_locales/zh-TW/pxt-SmartHome-jsdoc-strings.json",
         "_locales/zh-TW/pxt-SmartHome-strings.json"
     ],
+    "testFiles": [
+        "test.ts"
+    ],
     "public": true
 }
