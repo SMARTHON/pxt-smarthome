@@ -262,19 +262,6 @@ namespace House {
         return Math.round((tempIaq + humIaq) / 2)
     }
 
-    //% blockId=smarthon_get_heat
-    //% block="get heat (index) at %pin"
-    //% weight=77		
-    //% blockHidden=true
-
-    export function getHeat(pin: DigitalPin): number {
-        // let T = getTemperature(pin);
-        // let H = getHumidity(pin);
-        // heat_variable = -43.379 + 2.09401523 * T + 10.14333127 * H + -0.22475541 * T * H + -6.3783 * 0.001 * T * T + -5.481717 * 0.01 * H * H + 1.22874 * 0.001 * T * T * H + 8.5282 * 0.0001 * T * H * H + -1.99 * 0.000001 * T * T * H * H;
-        // return heat_variable;
-        return 0;
-    }
-
     /**
      * Read the detection result of motion sensor, return true when something moving, otherwise return false
      * @param motion_pin is the motion changing at the front
@@ -303,15 +290,6 @@ namespace House {
             return true;
         }
         else { return false; }
-    }
-    //% blockId=smarthon_get_towngas
-    //% block="get town gas value (intensity) at %pin"
-    //% weight=73
-    //% blockHidden=true
-
-    export function getTownGas(pin: AnalogPin): number {
-        towngasVariable = pins.analogReadPin(pin);
-        return towngasVariable;
     }
 
     /**
@@ -347,66 +325,6 @@ namespace House {
             case DistanceUnit.Inches: return Math.round(d / 148 * 1.4);
             default: return d;
         }
-    }
-
-    /**
-     * change the light intensity
-     * @param intensity the intensity of light
-     * @param pin the pin of light
-     */
-    //% blockId=smarthon_colorful_led
-    //% block="turn colorful LED to %intensity at %pin"
-    //% intensity.min=0 intensity.max=1023
-    //% pin.defl=AnalogPin.P0
-    //% weight=50
-    //%subcategory=More
-    //% blockHidden=true
-    export function TurnColorfulLED(intensity: number, pin: AnalogPin): void {
-        pins.analogWritePin(pin, intensity);
-    }
-
-    //% blockId=smarthon_red_LED
-    //% block="set red LED to intensity %intensity at %pin"
-    //% intensity.min=0 intensity.max=1023
-    //% weight=49
-    //%subcategory=More
-    //% blockHidden=true
-    export function TurnRedLED(intensity: number, pin: AnalogPin): void {
-        pins.analogWritePin(pin, intensity);
-    }
-
-    //% blockId=smarthon_green_LED
-    //% block="set green LED to intensity %intensity at %pin"
-    //% intensity.min=0 intensity.max=1023
-    //% weight=48
-    //%subcategory=More
-    //% blockHidden=true
-    export function TurnGreenLED(intensity: number, pin: AnalogPin): void {
-        pins.analogWritePin(pin, intensity);
-    }
-
-    //% blockId=smarthon_yellow_LED
-    //% block="set yellow LED to intensity %intensity at %pin"
-    //% intensity.min=0 intensity.max=1023
-    //% weight=47
-    //%subcategory=More
-    //% blockHidden=true
-    export function TurnYellowLED(intensity: number, pin: AnalogPin): void {
-        pins.analogWritePin(pin, intensity);
-    }
-
-    /**
-     *  Turn on mono tone Buzzer to make the noise
-     *  @param intensity change the intensity of Buzzer noise
-     */
-    //% blockId=smarthon_buzzer
-    //% block="set buzzer to intensity %intensity at %pin"
-    //% intensity.min=0 intensity.max=1023
-    //% weight=46
-    //%subcategory=More	
-    //% blockHidden=true
-    export function TurnBuzzer(intensity: number, pin: AnalogPin): void {
-        pins.analogWritePin(pin, intensity);
     }
 
     /**
