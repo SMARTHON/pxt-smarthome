@@ -103,7 +103,6 @@ namespace House {
         return lightVariable;
     }
 
-    //% block="get DHT11 at Pin %dataPin|"
     function dht11QueryData(dataPin: DigitalPin) {
         if (firstTime) {
             firstTime = false;
