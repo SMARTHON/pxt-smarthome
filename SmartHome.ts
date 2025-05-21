@@ -63,16 +63,16 @@ namespace House {
 
     export enum ServoSpeed {
         //% blockId=servo360_level_0
-        //% block="Stop"
+        //% block="stop"
         Level0 = 0,
         //% blockId=servo360_level_1
-        //% block="Level 1"
+        //% block="level 1"
         Level1 = 1,
         //% blockId=servo360_level_2
-        //% block="Level 2"
+        //% block="level 2"
         Level2 = 2,
         //% blockId=servo360_level_3
-        //% block="Level 3"
+        //% block="level 3"
         Level3 = 3
     }
 
