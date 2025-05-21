@@ -1,7 +1,7 @@
 {
-    "name": "pxt-SmartHome",
+    "name": "smarthon-smarthome-kit",
     "version": "1.7.0",
-    "description": "This is the extension for SmartHome in PXT",
+    "description": "The package for Smart Home IoT Maker Kit for micro:bit",
     "license": "MIT",
     "dependencies": {
         "core": "*",

@@ -3,7 +3,7 @@
  * SmartHome expansion module for Micro:bit
  */
 //% weight=98 color=#ffba52 icon="\uf015" block="SmartHome"
-namespace House {
+namespace smarthonHome {
     let lightVariable = 0;
     let temperatureVariable = 0;
     let humidityVariable = 0;
@@ -89,7 +89,7 @@ namespace House {
      * Read the light intensity (in percentage) result from light sensor
      * @param pin to get the analog value from pin
      */
-    //% blockId=smarthon_get_light_house
+    //% blockId=smarthon_home_get_light
     //% block="get light value (percentage) at pin %pin"
     //% weight=65	
     export function getLight(pin: AnalogPin): number {
@@ -198,6 +198,7 @@ namespace House {
      * Query the temperature and humidity information from DHT11 Temperature and Humidity sensor
      * @param dht11Pin Digital Read dht data
      */
+    //% blockId=smarthon_home_read_dht11
     //% block="read temperature & humidity sensor at pin %dht11Pin|"
     //% weight=90
     //% group="Temperature and Humidity Sensor (DHT11)"
@@ -210,6 +211,7 @@ namespace House {
      * Get the Temperature value (degree in Celsius or Fahrenheit) after queried the Temperature and Humidity sensor
      * @param tempDegree is the number of temperature
      */
+    //% blockId=smarthon_home_read_temperature
     //% block="get temperature |%tempDegree"
     //% weight=79
     //% group="Temperature and Humidity Sensor (DHT11)"
@@ -224,6 +226,7 @@ namespace House {
     /**
      * Get the humidity value (in percentage) after queried the Temperature and Humidity sensor
      */
+    //% blockId=smarthon_home_get_humidity
     //% block="get humidity"
     //% weight=78
     //% group="Temperature and Humidity Sensor (DHT11)"
@@ -232,26 +235,26 @@ namespace House {
     }
 
     /**
-     * Basic on the temperature and humidity to calculate the IAQ score, detail can refer to online documentation
+     * Basic on the temperature and humidity to calculate the indoor air quality score, detail can refer to online documentation
      */
-    //% blockId=smarthon_get_IAQ
-    //% block="get IAQ score"
+    //% blockId=smarthon_home_get_IndoorAirQualityScore
+    //% block="get indoor air quality score"
     //% weight=77		
     //% group="Temperature and Humidity Sensor (DHT11)"
-    export function getIAQ(): number {
+    export function getIndoorAirQualityScore(): number {
 
         let t = Math.round(lastSuccessfulQueryTemperature)
         let h = lastSuccessfulQueryHumidity
         //OLED.writeNumNewLine(t)
         //OLED.writeNumNewLine(h)
-        //get temp_IAQ
+        //get temp_indoor_air_quality_score
         if (t < 1 || t > 36) { tempIaq = 0 }
         else if ((t >= 1 && t <= 5) || (t >= 34 && t <= 36)) { tempIaq = 20 }
         else if ((t >= 6 && t <= 10) || (t >= 29 && t <= 33)) { tempIaq = 40 }
         else if ((t >= 11 && t <= 16) || (t >= 26 && t <= 28)) { tempIaq = 60 }
         else if ((t >= 17 && t <= 19) || (t >= 23 && t <= 25)) { tempIaq = 80 }
         else if ((t >= 20 && t <= 22)) { tempIaq = 100 }
-        //get hum_IAQ
+        //get hum_indoor_air_quality_score
         if (h < 20 || h > 90) { humIaq = 0 }
         else if ((h >= 20 && h <= 29) || (h >= 86 && h <= 90)) { humIaq = 20 }
         else if ((h >= 30 && h <= 39) || (h >= 80 && h <= 85)) { humIaq = 40 }
@@ -266,7 +269,7 @@ namespace House {
      * Read the detection result of motion sensor, return true when something moving, otherwise return false
      * @param motion_pin is the motion changing at the front
      */
-    //% blockId=read_motion_sensor_home
+    //% blockId=smarthon_home_read_motion_sensor
     //% block="get motion (triggered or not) at pin %motion_pin"
     //% weight=40
     export function read_motion_sensor_home(motion_pin: AnalogPin): boolean {
@@ -281,7 +284,7 @@ namespace House {
      * Read the detection result of flame sensor, return true when detect flame, otherwise return false
      * @param pin is read the flame sensor pin
      */
-    //% blockId=smarthon_get_flame
+    //% blockId=smarthon_home_get_flame
     //% block="get flame detection at pin %pin"
     //% weight=45	
     export function getFlame(pin: DigitalPin): boolean {
@@ -299,7 +302,7 @@ namespace House {
      * @param echo tragger to receive the ultrasonic signal
      * @param maxCmDistance is the maximum distance can be detected
      */
-    //% blockId=read_distance_sensor_home
+    //% blockId=smarthon_home_read_distance_sensor
     //% block="get distance unit %unit trig %trig echo %echo"
     //% weight=64
     //% trig.defl=DigitalPin.P14 echo.defl=DigitalPin.P15
@@ -331,7 +334,7 @@ namespace House {
      * Control the Motor to spin with specific speed
      * @param intensity change the intensity of Motor speed
      */
-    //% blockId=smarthon_motorfan
+    //% blockId=smarthon_home_motorfan
     //% block="set motor fan with speed %intensity at %pin1"
     //% intensity.min=0 intensity.max=1023
     //% pin1.defl=AnalogPin.P1
@@ -345,7 +348,7 @@ namespace House {
     * Control the 180 degree servo to specific angle
     * @param intensity is the servo turning to the angle
     */
-    //% blockId=smarthon_180_servo
+    //% blockId=smarthon_home_180_servo
     //% block="turn 180° servo to %degree degree at %pin"
     //% intensity.min=0 intensity.max=180
     //% weight=43
@@ -360,7 +363,7 @@ namespace House {
      * @param speed how fast the servo turning
      * @param pin is control the servo pin
      */
-    //% blockId=smarthon_360_servo
+    //% blockId=smarthon_home_360_servo
     //% block="turn 360° servo with %direction direction|speed %speed at %pin"
     //% weight=42
     //%subcategory=More
@@ -405,7 +408,7 @@ namespace House {
      * When the Pin is pressed, it will trigger the function inside the block
      * @param pin is read the button state
      */
-    //% blockId=button
+    //% blockId=smarthon_home_button
     //% block="when button at %pin pressed"	 
     //% weight=10
     export function Button(pin: PressButtonList, handler: () => void) {
