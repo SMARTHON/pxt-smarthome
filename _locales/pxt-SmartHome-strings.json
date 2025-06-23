@@ -23,6 +23,7 @@
   "smarthonHome.getLight|block": "Get light value (percentage) at Pin %pin",
   "smarthonHome.readDHT11|block": "Read Temperature & Humidity Sensor at pin %dht11pin|",
   "smarthonHome.readHumidityData|block": "Get Humidity",
+  "smarthonHome.getIndoorAirQualityScore|block": "Temperature and Humidity Sensor (DHT11)",
   "smarthonHome.readTemperatureData|block": "Get Temperature |%temp_degree",
   "smarthonHome.read_distance_sensor_home|block": "Get distance unit %unit trig %trig echo %echo",
   "smarthonHome.read_motion_sensor_home|block": "Get motion (triggered or not) at Pin %motion_pin",
