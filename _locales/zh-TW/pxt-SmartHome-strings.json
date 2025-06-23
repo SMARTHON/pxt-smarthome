@@ -26,6 +26,8 @@
   "smarthonHome.readTemperatureData|block": "取得 溫度數值 |%temp_degree",
   "smarthonHome.read_distance_sensor_home|block": "取得 量度距離 使用單位 %unit trig接口 %trig echo接口 %echo",
   "smarthonHome.read_motion_sensor_home|block": "取得 動作傳感器數值 接口 %motion_pin",
+
+  
   "smarthonHome|block": "SmartHome",
   "{id:category}smarthonHome": "smarthonHome",
   "{id:group}Temperature and Humidity Sensor (DHT11)": "溫濕度傳感器 (DHT11)",
