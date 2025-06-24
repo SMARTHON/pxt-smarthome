@@ -13,7 +13,7 @@
         "README.md",
         "SmartHome.ts",
 		"_locales/zh-CN/pxt-SmartHome-strings.json",
-        "_locales/zh-TW/pxt-SmartHome-strings.json"
+        "_locales/zh-TW/Smarthome-TW.json"
     ],
     "testFiles": [
         "test.ts"
