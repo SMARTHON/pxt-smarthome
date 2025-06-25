@@ -12,8 +12,8 @@
     "files": [
         "README.md",
         "SmartHome.ts",
-		"_locales/zh-CN/pxt-SmartHome-strings.json",
-        "_locales/zh-TW/Smarthome-TW.json"
+		"_locales/zh-CN/smarthon-smarthome-kit-strings.json",
+        "_locales/zh-TW/smarthon-smarthome-kit-strings.json"
     ],
     "testFiles": [
         "test.ts"
