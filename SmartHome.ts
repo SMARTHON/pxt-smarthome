@@ -313,7 +313,7 @@ namespace House {
         temp_pin = parseInt(motion_pin.toString())
         temp = pins.analogReadPin(temp_pin)
         if (control.ramSize() > 20000) {
-            if (temp > 400) {
+            if (temp > 450) {
                 return true
             } else {
                 return false
