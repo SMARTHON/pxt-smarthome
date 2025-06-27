@@ -309,12 +309,22 @@ namespace House {
     //% blockId=read_motion_sensor_home
     //% block="Get motion (triggered or not) at Pin %motion_pin"
     //% weight=40
-	export function read_motion_sensor_home(motion_pin: AnalogPin): boolean {
+    export function read_motion_sensor_home(motion_pin: AnalogPin): boolean {
         temp_pin = parseInt(motion_pin.toString())
         temp = pins.analogReadPin(temp_pin)
-        if (temp > 800)
-            return true
-        else return false
+        if (control.ramSize() > 20000) {
+            if (temp > 400) {
+                return true
+            } else {
+                return false
+            }
+        }
+        else {
+            if (temp > 800)
+                return true
+            else return false
+        }
+        return false
     }
 
     /** 
@@ -540,7 +550,7 @@ namespace House {
                 buttonName = DigitalPin.P2
                 break
             /*
-			case PressButtonList.b12:
+            case PressButtonList.b12:
                 buttonName = DigitalPin.P12
                 break
             case PressButtonList.b13:
@@ -552,7 +562,7 @@ namespace House {
             case PressButtonList.b15:
                 buttonName = DigitalPin.P15
                 break
-			*/
+            */
             default:
                 buttonName = DigitalPin.P0
                 break
