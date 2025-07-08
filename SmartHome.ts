@@ -4,42 +4,19 @@
 //% weight=98 color=#ffba52 icon="\uf015" block="SmartHome"
 namespace House {
     let light_variable = 0
-    let temperature_variable = 0
-    let humidity_variable = 0
     let heat_variable = 0
-    let button_variable = 0
-    let motion_variable = 0
     let flame_variable
     let towngas_variable = 0
     let temp_IAQ = 0
     let hum_IAQ = 0
     let temp_pin = 0
     let temp = 0
-    let _temperature: number = -999.0
-    let _humidity: number = -999.0
-    let _readSuccessful: boolean = false
-    let _firsttime: boolean = true
-    let _last_successful_query_temperature: number = 0
-    let _last_successful_query_humidity: number = 0
-
 
     export enum ServoDirection {
         //% block="clockwise"
         clockwise,
         //% block="anti-clockwise"
         anticlockwise
-    }
-    export enum Temp_degree {
-        //% block="°C"
-        degree_Celsius,
-        //% block="°F"
-        degree_Fahrenheit
-    }
-    export enum DHT11dataType {
-        //% block="temperature"
-        temperature,
-        //% block="humidity"
-        humidity
     }
 
     export enum PressButtonList {
@@ -102,14 +79,30 @@ namespace House {
         return light_variable;
     }
 
+    //-------DHT11---------------------------------------------------
 
-    //% block="Get DHT11 at Pin %dataPin|"
-    function dht11_queryData(dataPin: DigitalPin) {
+    export enum Temp_degree {
+        //% block="°C"
+        degree_Celsius,
+        //% block="°F"
+        degree_Fahrenheit
+    }
 
-        if (_firsttime == true) {
-            _firsttime = false
-            dht11_queryData(dataPin)
-        }
+    let _temperature: number = -999.0
+    let _humidity: number = -999.0
+    let _readSuccessful: boolean = false
+    let _last_successful_query_temperature: number = 0
+    let _last_successful_query_humidity: number = 0
+
+    /**
+     * Query the temperature and humidity infromation from DHT11 Temperature and Humidity sensor
+     *
+     */
+    //% blockId="get_dht11_value"
+    //% block="Read Temperature & Humidity Sensor at pin %dataPin|"
+    //% weight=90
+    //% group="Temperature and Humidity Sensor (DHT11)"
+    export function dht11_queryData(dataPin: DigitalPin) {
 
         //initialize
         let startTime: number = 0
@@ -120,9 +113,11 @@ namespace House {
         let resultArray: number[] = []
         for (let index = 0; index < 40; index++) dataArray.push(false)
         for (let index = 0; index < 5; index++) resultArray.push(0)
-        _humidity = 0
-        _temperature = 0
+        _humidity = -999.0
+        _temperature = -999.0
         _readSuccessful = false
+        pins.digitalWritePin(dataPin, 1)
+        control.waitMicros(30)
 
         //request data
         pins.digitalWritePin(dataPin, 0) //begin protocol
@@ -130,51 +125,26 @@ namespace House {
         pins.setPull(dataPin, PinPullMode.PullUp) //pull up data pin if needed
         pins.digitalReadPin(dataPin)
         control.waitMicros(40)
+
         if (pins.digitalReadPin(dataPin) == 1) {
             //if no respone,exit the loop to avoid Infinity loop
             pins.setPull(dataPin, PinPullMode.PullNone) //release pull up
         }
         else {
             pins.setPull(dataPin, PinPullMode.PullNone) //release pull up
-
             while (pins.digitalReadPin(dataPin) == 0); //sensor response
             while (pins.digitalReadPin(dataPin) == 1); //sensor response
 
-            //-------------V2---------------------------------
             //read data (5 bytes)
-            if (control.ramSize() > 20000) {
-                for (let index = 0; index < 40; index++) {
-                    startTime = input.runningTimeMicros()
-                    while (pins.digitalReadPin(dataPin) == 1) {
-                        endTime = input.runningTimeMicros()
-                        if ((endTime - startTime) > 150) {
-                            //OLED.writeStringNewLine("break")
-                            break;
-                        }
-                    };
-                    while (pins.digitalReadPin(dataPin) == 0) {
-                        endTime = input.runningTimeMicros()
-                        if ((endTime - startTime) > 150) {
-                            //OLED.writeStringNewLine("break")
-                            break;
-                        }
-                    };
-                    control.waitMicros(28)
-                    //if sensor pull up data pin for more than 28 us it means 1, otherwise 0
-                    if (pins.digitalReadPin(dataPin) == 1) dataArray[index] = true
-                }
-            }
-            //-------------------V1------------------------
-            else if (control.ramSize() < 20000) {
-                for (let index = 0; index < 40; index++) {
-                    while (pins.digitalReadPin(dataPin) == 1);
-                    while (pins.digitalReadPin(dataPin) == 0);
-                    control.waitMicros(28)
-                    //if sensor still pull up data pin after 28 us it means 1, otherwise 0
-                    if (pins.digitalReadPin(dataPin) == 1) dataArray[index] = true
-                }
+            for (let index = 0; index < 40; index++) {
+                while (pins.digitalReadPin(dataPin) == 1);
+                while (pins.digitalReadPin(dataPin) == 0);
+                control.waitMicros(28)
+                //if sensor still pull up data pin after 28 us it means 1, otherwise 0
+                if (pins.digitalReadPin(dataPin) == 1) dataArray[index] = true
             }
 
+            endTime = input.runningTimeMicros()
 
             //convert byte number array to integer
             for (let index = 0; index < 5; index++)
@@ -188,39 +158,20 @@ namespace House {
             if (checksumTmp >= 256) checksumTmp -= 256
             if (checksum == checksumTmp) _readSuccessful = true
 
-            //set data variable if checksum ok
+            //read data if checksum ok
             if (_readSuccessful) {
-                //OLED.writeStringNewLine("success")
                 _humidity = resultArray[0] + resultArray[1] / 100
                 _temperature = resultArray[2] + resultArray[3] / 100
                 _last_successful_query_humidity = _humidity
                 _last_successful_query_temperature = _temperature
             } else {
-                //OLED.writeStringNewLine("fail")
                 _humidity = _last_successful_query_humidity
                 _temperature = _last_successful_query_temperature
             }
-
         }
-        //wait 1.5 sec after query 
-        basic.pause(1500)
+        //wait 2 sec after query
+        basic.pause(2000)
     }
-
-
-    /**
-     * Query the temperature and humidity infromation from DHT11 Temperature and Humidity sensor
-     *  
-     */
-    //% block="Read Temperature & Humidity Sensor at pin %dht11pin|"
-    //% weight=90
-    //% group="Temperature and Humidity Sensor (DHT11)"
-    //% blockGap=12
-    export function readDHT11(dht11pin: DigitalPin): void {
-        // querydata
-        dht11_queryData(dht11pin)
-    }
-
-
 
     /**
      * Get the Temperature value (degree in Celsius or Fahrenheit) after queried the Temperature and Humidity sensor
@@ -253,6 +204,7 @@ namespace House {
 
     }
 
+    //-------DHT11---------------------------------------------------
 
     /**
      * Basic on the temperature and humidity to calculate the IAQ score, detail can refer to online documentation
