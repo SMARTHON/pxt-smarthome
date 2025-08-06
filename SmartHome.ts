@@ -180,9 +180,9 @@ namespace House {
     //% block="Get Temperature |%temp_degree"
     //% weight=79
     //% group="Temperature and Humidity Sensor (DHT11)"
-    export function readTemperatureData(temp_degree: Temp_degree): number {
+    export function readTemperatureData(temp_degree: tempDegree): number {
         // querydata
-        if (temp_degree == Temp_degree.degree_Celsius) {
+        if (temp_degree == tempDegree.degreeCelsius) {
             return Math.round(_last_successful_query_temperature)
         }
         else {
@@ -312,7 +312,7 @@ namespace House {
     //% weight=64
     //% trig.defl=DigitalPin.P14 echo.defl=DigitalPin.P15
     //% inlineInputMode=inline
-    export function readDistanceSensorHome(unit: DistanceUnit, trig: DigitalPin, echo: DigitalPin, maxCmDistance = 500): number {
+    export function readDistanceSensorHome(unit: distanceUnit, trig: DigitalPin, echo: DigitalPin, maxCmDistance = 500): number {
         // send pulse
         let d = 10;
         pins.setPull(trig, PinPullMode.PullNone);
@@ -329,8 +329,8 @@ namespace House {
         }
 
         switch (unit) {
-            case DistanceUnit.Centimeters: return Math.round(d / 58 * 1.4);
-            case DistanceUnit.Inches: return Math.round(d / 148 * 1.4);
+            case distanceUnit.Centimeters: return Math.round(d / 58 * 1.4);
+            case distanceUnit.Inches: return Math.round(d / 148 * 1.4);
             default: return d;
         }
     }
@@ -442,7 +442,7 @@ namespace House {
     //% weight=42
     //%subcategory=More
 
-    export function turn360Servo(direction: ServoDirection, speed: ServoSpeed, pin: AnalogPin): void {
+    export function turn360Servo(direction: servoDirection, speed: servoSpeed, pin: AnalogPin): void {
 
         switch (direction) {
 
@@ -489,16 +489,16 @@ namespace House {
     //% blockId="button" 
     //% block="When Button at %pin pressed"	 
     //% weight=10
-    export function buttonHome(pin: PressButtonList, handler: () => void) {
+    export function buttonHome(pin: pressButtonList, handler: () => void) {
         let buttonName;
         switch (pin) {
-            case PressButtonList.b0:
+            case pressButtonList.b0:
                 buttonName = DigitalPin.P0
                 break
-            case PressButtonList.b1:
+            case pressButtonList.b1:
                 buttonName = DigitalPin.P1
                 break
-            case PressButtonList.b2:
+            case pressButtonList.b2:
                 buttonName = DigitalPin.P2
                 break
             /*

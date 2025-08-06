@@ -27,7 +27,7 @@
   "House.getIAQ|block": "取得 室内空气质素(IAQ)",
   "House.getLight|block": "取得 亮度传感器数值 接口 %pin",
   "House.getTownGas|block": "取得 煤气强度 接口 %pin",
-  "House.dht11QueryData|block": "读取 温湿度传感器数值 接口 %dht11pin|",
+  "House.dht11QueryData|block": "读取 温湿度传感器数值 接口 %dataPin|",
   "House.readHumidityData|block": "取得 湿度数值",
   "House.readTemperatureData|block": "取得 温度数值 |%temp_degree",
   "House.readDistanceSensorHome|block": "取得 量度距离 使用单位 %unit trig接口 %trig echo接口 %echo",

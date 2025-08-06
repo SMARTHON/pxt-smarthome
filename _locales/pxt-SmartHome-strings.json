@@ -27,7 +27,7 @@
   "House.getIAQ|block": "Get IAQ Score",
   "House.getLight|block": "Get light value (percentage) at Pin %pin",
   "House.getTownGas|block": "Get town gas value (intensity) at %pin",
-  "House.dht11QueryData|block": "Read Temperature & Humidity Sensor at pin %dht11pin|",
+  "House.dht11QueryData|block": "Read Temperature & Humidity Sensor at pin %dataPin|",
   "House.readHumidityData|block": "Get Humidity",
   "House.readTemperatureData|block": "Get Temperature |%temp_degree",
   "House.readDistanceSensorHome|block": "Get distance unit %unit trig %trig echo %echo",
