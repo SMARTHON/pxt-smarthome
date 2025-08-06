@@ -12,14 +12,14 @@ namespace House {
     let temp_pin = 0
     let temp = 0
 
-    export enum ServoDirection {
+    export enum servoDirection {
         //% block="clockwise"
         clockwise,
         //% block="anti-clockwise"
         anticlockwise
     }
 
-    export enum PressButtonList {
+    export enum pressButtonList {
         //% block="P0"
         b0 = 0,
         //% block="P1"
@@ -36,7 +36,7 @@ namespace House {
         //b15 = 15
     }
 
-    export enum ServoSpeed {
+    export enum servoSpeed {
         //% blockId=servo360_level_0
         //% block="Stop"
         level0 = 0,
@@ -51,7 +51,7 @@ namespace House {
         level3 = 3
     }
 
-    export enum DistanceUnit {
+    export enum distanceUnit {
         //% block="cm"
         Centimeters,
         //% block="inches"
@@ -81,11 +81,11 @@ namespace House {
 
     //-------DHT11---------------------------------------------------
 
-    export enum Temp_degree {
+    export enum tempDegree {
         //% block="°C"
-        degree_Celsius,
+        degreeCelsius,
         //% block="°F"
-        degree_Fahrenheit
+        degreeFahrenheit
     }
 
     let _temperature: number = -999.0
@@ -102,7 +102,7 @@ namespace House {
     //% block="Read Temperature & Humidity Sensor at pin %dataPin|"
     //% weight=90
     //% group="Temperature and Humidity Sensor (DHT11)"
-    export function dht11_queryData(dataPin: DigitalPin) {
+    export function dht11QueryData(dataPin: DigitalPin) {
 
         //initialize
         let startTime: number = 0
@@ -261,7 +261,7 @@ namespace House {
     //% blockId=read_motion_sensor_home
     //% block="Get motion (triggered or not) at Pin %motion_pin"
     //% weight=40
-    export function read_motion_sensor_home(motion_pin: AnalogPin): boolean {
+    export function readMotionSensorHome(motion_pin: AnalogPin): boolean {
         temp_pin = parseInt(motion_pin.toString())
         temp = pins.analogReadPin(temp_pin)
         if (control.ramSize() > 20000) {
@@ -312,7 +312,7 @@ namespace House {
     //% weight=64
     //% trig.defl=DigitalPin.P14 echo.defl=DigitalPin.P15
     //% inlineInputMode=inline
-    export function read_distance_sensor_home(unit: DistanceUnit, trig: DigitalPin, echo: DigitalPin, maxCmDistance = 500): number {
+    export function readDistanceSensorHome(unit: DistanceUnit, trig: DigitalPin, echo: DigitalPin, maxCmDistance = 500): number {
         // send pulse
         let d = 10;
         pins.setPull(trig, PinPullMode.PullNone);
@@ -342,7 +342,7 @@ namespace House {
     //% weight=50
     //%subcategory=More
     //% blockHidden=true
-    export function TurnColorfulLED(intensity: number, pin: AnalogPin): void {
+    export function turnColorfulLED(intensity: number, pin: AnalogPin): void {
 
         pins.analogWritePin(pin, intensity);
     }
@@ -355,7 +355,7 @@ namespace House {
     //%subcategory=More
     //% blockHidden=true
 
-    export function TurnRedLED(intensity: number, pin: AnalogPin): void {
+    export function turnRedLED(intensity: number, pin: AnalogPin): void {
 
         pins.analogWritePin(pin, intensity);
     }
@@ -367,7 +367,7 @@ namespace House {
     //%subcategory=More
     //% blockHidden=true
 
-    export function TurnGreenLED(intensity: number, pin: AnalogPin): void {
+    export function turnGreenLED(intensity: number, pin: AnalogPin): void {
 
         pins.analogWritePin(pin, intensity);
     }
@@ -380,7 +380,7 @@ namespace House {
     //% blockHidden=true
 
 
-    export function TurnYellowLED(intensity: number, pin: AnalogPin): void {
+    export function turnYellowLED(intensity: number, pin: AnalogPin): void {
 
         pins.analogWritePin(pin, intensity);
     }
@@ -395,7 +395,7 @@ namespace House {
     //%subcategory=More	
     //% blockHidden=true
 
-    export function TurnBuzzer(intensity: number, pin: AnalogPin): void {
+    export function turnBuzzer(intensity: number, pin: AnalogPin): void {
 
         pins.analogWritePin(pin, intensity);
     }
@@ -411,7 +411,7 @@ namespace House {
     //% weight=45	
     //%subcategory=More
 
-    export function TurnMotor(intensity: number, pin1: AnalogPin): void {
+    export function turnMotor(intensity: number, pin1: AnalogPin): void {
         pins.analogWritePin(pin1, intensity);
     }
 
@@ -427,7 +427,7 @@ namespace House {
     //% weight=43
     //%subcategory=More	
 
-    export function Turn180Servo(intensity: number, pin: AnalogPin): void {
+    export function turn180Servo(intensity: number, pin: AnalogPin): void {
 
         pins.servoWritePin(pin, intensity)
     }
@@ -442,7 +442,7 @@ namespace House {
     //% weight=42
     //%subcategory=More
 
-    export function Turn360Servo(direction: ServoDirection, speed: ServoSpeed, pin: AnalogPin): void {
+    export function turn360Servo(direction: ServoDirection, speed: ServoSpeed, pin: AnalogPin): void {
 
         switch (direction) {
 
@@ -489,7 +489,7 @@ namespace House {
     //% blockId="button" 
     //% block="When Button at %pin pressed"	 
     //% weight=10
-    export function Button(pin: PressButtonList, handler: () => void) {
+    export function buttonHome(pin: PressButtonList, handler: () => void) {
         let buttonName;
         switch (pin) {
             case PressButtonList.b0:
