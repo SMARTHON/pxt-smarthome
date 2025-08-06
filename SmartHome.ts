@@ -446,35 +446,35 @@ namespace House {
 
         switch (direction) {
 
-            case ServoDirection.clockwise:
+            case servoDirection.clockwise:
                 switch (speed) {
-                    case ServoSpeed.level0:
+                    case servoSpeed.level0:
                         pins.servoWritePin(pin, 90)
                         break
-                    case ServoSpeed.level1:
+                    case servoSpeed.level1:
                         pins.servoWritePin(pin, 83)
                         break
-                    case ServoSpeed.level2:
+                    case servoSpeed.level2:
                         pins.servoWritePin(pin, 82)
                         break
-                    case ServoSpeed.level3:
+                    case servoSpeed.level3:
                         pins.servoWritePin(pin, 80)
                         break
                 }
                 break
 
-            case ServoDirection.anticlockwise:
+            case servoDirection.anticlockwise:
                 switch (speed) {
-                    case ServoSpeed.level0:
+                    case servoSpeed.level0:
                         pins.servoWritePin(pin, 90)
                         break
-                    case ServoSpeed.level1:
+                    case servoSpeed.level1:
                         pins.servoWritePin(pin, 96)
                         break
-                    case ServoSpeed.level2:
+                    case servoSpeed.level2:
                         pins.servoWritePin(pin, 97)
                         break
-                    case ServoSpeed.level3:
+                    case servoSpeed.level3:
                         pins.servoWritePin(pin, 98)
                         break
                 }
