@@ -186,7 +186,7 @@ namespace smarthonHome {
      * @param dht11Pin Digital Read dht data
      */
     //% blockId=smarthon_home_read_dht11
-    //% block="read temperature & humidity sensor at pin %dht11Pin|"
+    //% block="read temperature & humidity sensor at pin %dht11Pin"
     //% weight=90
     //% group="Temperature and Humidity Sensor (DHT11)"
     export function readDht11(dht11Pin: DigitalPin): void {
@@ -198,10 +198,13 @@ namespace smarthonHome {
      * @param tempDegree is the number of temperature
      */
     //% blockId=smarthon_home_read_temperature
-    //% block="get temperature |%tempDegree"
+    //% block="get temperature %tempDegree"
     //% weight=79
     //% group="Temperature and Humidity Sensor (DHT11)"
     export function readTemperatureData(tempDegree: TempDegree): number {
+        if (lastSuccessfulQueryTemperature == null) {
+        return -1; // Indicate an error
+        }
         if (tempDegree == TempDegree.DegreeCelsius) {
             return Math.round(lastSuccessfulQueryTemperature);
         } else {
