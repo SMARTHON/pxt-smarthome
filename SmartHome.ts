@@ -8,40 +8,18 @@ namespace smarthonHome {
     let temperatureVariable = 0;
     let humidityVariable = 0;
     let heatVariable = 0;
-    let buttonVariable = 0;
-    let motionVariable = 0;
     let flameVariable = 0;
     let towngasVariable = 0;
     let tempIaq = 0;
     let humIaq = 0;
     let tempPin = 0;
     let temp = 0;
-    let temperature = -999.0;
-    let humidity = -999.0;
-    let readSuccessful = false;
-    let firstTime = true;
-    let lastSuccessfulQueryTemperature = 0;
-    let lastSuccessfulQueryHumidity = 0;
 
     export enum ServoDirection {
         //% block="clockwise"
         Clockwise,
         //% block="anti-clockwise"
         Anticlockwise
-    }
-
-    export enum TempDegree {
-        //% block="°C"
-        DegreeCelsius,
-        //% block="°F"
-        DegreeFahrenheit
-    }
-
-    export enum Dht11DataType {
-        //% block="temperature"
-        Temperature,
-        //% block="humidity"
-        Humidity
     }
 
     export enum PressButtonList {
@@ -103,12 +81,21 @@ namespace smarthonHome {
         return lightVariable;
     }
 
-    function dht11QueryData(dataPin: DigitalPin) {
-        if (firstTime) {
-            firstTime = false;
-            dht11QueryData(dataPin);
-        }
+    //---DHT11 Temperature and Humidity Sensor---
+    export enum TempDegree {
+        //% block="°C"
+        DegreeCelsius,
+        //% block="°F"
+        DegreeFahrenheit
+    }
 
+    let temperature = -999.0;
+    let humidity = -999.0;
+    let readSuccessful = false;
+    let lastSuccessfulQueryTemperature = 0;
+    let lastSuccessfulQueryHumidity = 0;
+
+    function dht11QueryData(dataPin: DigitalPin) {
         // Initialize
         let startTime = 0;
         let endTime = 0;
@@ -202,7 +189,6 @@ namespace smarthonHome {
     //% block="read temperature & humidity sensor at pin %dht11Pin|"
     //% weight=90
     //% group="Temperature and Humidity Sensor (DHT11)"
-    //% blockGap=12
     export function readDht11(dht11Pin: DigitalPin): void {
         dht11QueryData(dht11Pin);
     }
