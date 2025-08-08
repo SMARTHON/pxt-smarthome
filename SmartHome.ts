@@ -2,44 +2,23 @@
  * Custom blocks
  */
 //% weight=98 color=#ffba52 icon="\uf015" block="SmartHome"
-namespace House {
+namespace smarthonHome {
     let light_variable = 0
     let temperature_variable = 0
     let humidity_variable = 0
     let heat_variable = 0
-    let button_variable = 0
-    let motion_variable = 0
     let flame_variable
     let towngas_variable = 0
     let temp_IAQ = 0
     let hum_IAQ = 0
     let temp_pin = 0
     let temp = 0
-    let _temperature: number = -999.0
-    let _humidity: number = -999.0
-    let _readSuccessful: boolean = false
-    let _firsttime: boolean = true
-    let _last_successful_query_temperature: number = 0
-    let _last_successful_query_humidity: number = 0
-
 
     export enum ServoDirection {
         //% block="clockwise"
         clockwise,
         //% block="anti-clockwise"
         anticlockwise
-    }
-    export enum Temp_degree {
-        //% block="°C"
-        degree_Celsius,
-        //% block="°F"
-        degree_Fahrenheit
-    }
-    export enum DHT11dataType {
-        //% block="temperature"
-        temperature,
-        //% block="humidity"
-        humidity
     }
 
     export enum PressButtonList {
@@ -102,14 +81,22 @@ namespace House {
         return light_variable;
     }
 
+    //--DHT11 Temperature and Humidity Sensor----------------------------
+    export enum TempDegree  {
+        //% block="°C"
+        DegreeCelsius,
+        //% block="°F"
+        DegreeFahrenheit
+    }
 
+    let temperature = -999.0;
+    let humidity = -999.0;
+    let readSuccessful = false;
+    let lastSuccessfulQueryTemperature = 0;
+    let lastSuccessfulQueryHumidity = 0;
+    
     //% block="Get DHT11 at Pin %dataPin|"
-    function dht11_queryData(dataPin: DigitalPin) {
-
-        if (_firsttime == true) {
-            _firsttime = false
-            dht11_queryData(dataPin)
-        }
+    function readDHT11(dataPin: DigitalPin) {
 
         //initialize
         let startTime: number = 0
@@ -120,9 +107,9 @@ namespace House {
         let resultArray: number[] = []
         for (let index = 0; index < 40; index++) dataArray.push(false)
         for (let index = 0; index < 5; index++) resultArray.push(0)
-        _humidity = 0
-        _temperature = 0
-        _readSuccessful = false
+        humidity = 0
+        temperature = 0
+        readSuccessful = false
 
         //request data
         pins.digitalWritePin(dataPin, 0) //begin protocol
@@ -186,24 +173,24 @@ namespace House {
             checksum = resultArray[4]
             if (checksumTmp >= 512) checksumTmp -= 512
             if (checksumTmp >= 256) checksumTmp -= 256
-            if (checksum == checksumTmp) _readSuccessful = true
+            if (checksum == checksumTmp) readSuccessful = true
 
             //set data variable if checksum ok
-            if (_readSuccessful) {
+            if (readSuccessful) {
                 //OLED.writeStringNewLine("success")
-                _humidity = resultArray[0] + resultArray[1] / 100
-                _temperature = resultArray[2] + resultArray[3] / 100
-                _last_successful_query_humidity = _humidity
-                _last_successful_query_temperature = _temperature
+                humidity = resultArray[0] + resultArray[1] / 100
+                temperature = resultArray[2] + resultArray[3] / 100
+                lastSuccessfulQueryHumidity = humidity
+                lastSuccessfulQueryTemperature  = temperature
             } else {
                 //OLED.writeStringNewLine("fail")
-                _humidity = _last_successful_query_humidity
-                _temperature = _last_successful_query_temperature
+                humidity = lastSuccessfulQueryHumidity
+                temperature = lastSuccessfulQueryTemperature
             }
 
         }
         //wait 1.5 sec after query 
-        basic.pause(1500)
+        basic.pause(2000)
     }
 
 
@@ -215,9 +202,9 @@ namespace House {
     //% weight=90
     //% group="Temperature and Humidity Sensor (DHT11)"
     //% blockGap=12
-    export function readDHT11(dht11pin: DigitalPin): void {
+    export function readDht11(dht11pin: DigitalPin): void {
         // querydata
-        dht11_queryData(dht11pin)
+        readDHT11(dht11pin)
     }
 
 
@@ -229,13 +216,13 @@ namespace House {
     //% block="Get Temperature |%temp_degree"
     //% weight=79
     //% group="Temperature and Humidity Sensor (DHT11)"
-    export function readTemperatureData(temp_degree: Temp_degree): number {
+    export function readTemperatureData(temp_degree: TempDegree ): number {
         // querydata
-        if (temp_degree == Temp_degree.degree_Celsius) {
-            return Math.round(_last_successful_query_temperature)
+        if (temp_degree == TempDegree.DegreeCelsius) {
+            return Math.round(lastSuccessfulQueryTemperature)
         }
         else {
-            return Math.round((_last_successful_query_temperature * 1.8) + 32)
+            return Math.round((lastSuccessfulQueryTemperature * 1.8) + 32)
         }
     }
 
@@ -248,7 +235,7 @@ namespace House {
     export function readHumidityData(): number {
         // querydata
 
-        return Math.round(_last_successful_query_humidity)
+        return Math.round(lastSuccessfulQueryHumidity)
 
 
     }
@@ -263,8 +250,8 @@ namespace House {
     //% group="Temperature and Humidity Sensor (DHT11)"
     export function getIAQ(): number {
 
-        let t = Math.round(_last_successful_query_temperature)
-        let h = _last_successful_query_humidity
+        let t = Math.round(lastSuccessfulQueryTemperature)
+        let h = lastSuccessfulQueryHumidity
         //OLED.writeNumNewLine(t)
         //OLED.writeNumNewLine(h)
         //get temp_IAQ
