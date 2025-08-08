@@ -29,11 +29,13 @@
   "smarthonHome.getIAQ|block": "取得 室内空气质素(IAQ)",
   "smarthonHome.getLight|block": "取得 亮度传感器数值 接口 %pin",
   "smarthonHome.getTownGas|block": "取得 煤气强度 接口 %pin",
-  "smarthonHome.readDHT11|block": "读取 温湿度传感器数值 接口 %dht11pin|",
+  "smarthonHome.readDHT11|block": "读取 温湿度传感器数值 接口 %dht11pin",
   "smarthonHome.readHumidityData|block": "取得 湿度数值",
-  "smarthonHome.readTemperatureData|block": "取得 温度数值 |%temp_degree",
-  "smarthonHome.read_distance_sensor_home|block": "取得 量度距离 使用单位 %unit trig接口 %trig echo接口 %echo",
-  "smarthonHome.read_motion_sensor_home|block": "取得 动作传感器数值 接口 %motion_pin",
+  "smarthonHome.readTemperatureData|block": "取得 温度数值 %temp_degree",
+  "smarthonHome.readDistanceSensorHome|block": "取得 量度距离 使用单位 %unit trig接口 %trig echo接口 %echo",
+  "smarthonHome.readMotionSensorHome|block": "取得 动作传感器数值 接口 %motion_pin",
+  
+  
   "smarthonHome|block": "SmartHome",
   "{id:category}smarthonHome": "smarthonHome",
   "{id:group}Temperature and Humidity Sensor (DHT11)": "温湿度传感器 (DHT11)",

@@ -258,7 +258,7 @@ namespace smarthonHome {
     //% blockId=smarthon_home_read_motion_sensor
     //% block="get motion (triggered or not) at pin %motion_pin"
     //% weight=40
-    export function read_motion_sensor_home(motion_pin: AnalogPin): boolean {
+    export function readMotionSensorHome(motion_pin: AnalogPin): boolean {
         tempPin = parseInt(motion_pin.toString())
         temp = pins.analogReadPin(tempPin)
         if (temp > 800)
@@ -293,7 +293,7 @@ namespace smarthonHome {
     //% weight=64
     //% trig.defl=DigitalPin.P14 echo.defl=DigitalPin.P15
     //% inlineInputMode=inline
-    export function read_distance_sensor_home(unit: DistanceUnit, trig: DigitalPin, echo: DigitalPin, maxCmDistance = 500): number {
+    export function readDistanceSensorHome(unit: DistanceUnit, trig: DigitalPin, echo: DigitalPin, maxCmDistance = 500): number {
         // send pulse
         let d = 10;
         pins.setPull(trig, PinPullMode.PullNone);

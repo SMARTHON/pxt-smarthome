@@ -21,14 +21,12 @@
   "smarthonHome.TurnMotor|block": "開啟風扇馬達至速度 %intensity 接口 %pin1",
   "smarthonHome.getFlame|block": "取得 火焰檢測器數值 接口 %pin",
   "smarthonHome.getLight|block": "取得 亮度傳感器數值 接口 %pin",
-  "smarthonHome.readDht11|block": "讀取 溫濕度傳感器數值 接口 %dht11pin|",
   "smarthonHome.getIndoorAirQualityScore|block": "取得 室内空气质素(IAQ)",
+  "smarthonHome.readDht11|block": "讀取 溫濕度傳感器數值 接口 %dht11pin",
+  "smarthonHome.readTemperatureData|block": "取得 溫度數值 %temp_degree",
   "smarthonHome.readHumidityData|block": "取得 濕度數值",
-  "smarthonHome.readTemperatureData|block": "取得 溫度數值 |%temp_degree",
-  "smarthonHome.read_distance_sensor_home|block": "取得 量度距離 使用單位 %unit trig接口 %trig echo接口 %echo",
-  "smarthonHome.read_motion_sensor_home|block": "取得 動作傳感器數值 接口 %motion_pin",
-
-
+  "smarthonHome.readDistanceSensorHome|block": "取得 量度距離 使用單位 %unit trig接口 %trig echo接口 %echo",
+  "smarthonHome.readMotionSensorHome|block": "取得 動作傳感器數值 接口 %motion_pin",
   
   "smarthonHome|block": "SmartHome",
   "{id:category}smarthonHome": "smarthonHome",
