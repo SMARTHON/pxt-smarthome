@@ -1,5 +1,5 @@
 {
-  "smarthonHome.Button|block": "When Button at %pin pressed",
+  "smarthonHome.readButton|block": "When Button at %pin pressed",
   "smarthonHome.DHT11dataType.humidity|block": "humidity",
   "smarthonHome.DHT11dataType.temperature|block": "temperature",
   "smarthonHome.DistanceUnit.Centimeters|block": "cm",

@@ -1,5 +1,5 @@
 {
-  "smarthonHome.Button|block": "当按钮接口 %pin 被按下",
+  "smarthonHome.readButton|block": "当按钮接口 %pin 被按下",
   "smarthonHome.Dht11DataType.Humidity|block": "湿度",
   "smarthonHome.Dht11DataType.Temperature|block": "温度",
   "smarthonHome.DistanceUnit.Centimeters|block": "厘米",
