@@ -11,6 +11,8 @@ namespace smarthonHome {
     let towngasVariable = 0;
     let tempIaq = 0;
     let humIaq = 0;
+    let tempPin = 0;
+    let temp = 0;
     let temperature = -999.0;
     let humidity = -999.0;
     let readSuccessful = false;
@@ -260,6 +262,21 @@ namespace smarthonHome {
         return Math.round((tempIaq + humIaq) / 2)
     }
 
+    /**
+     * Read the detection result of motion sensor, return true when something moving, otherwise return false
+     * @param motion_pin is the motion changing at the front
+     */
+    //% blockId=smarthon_home_read_motion_sensor
+    //% block="get motion (triggered or not) at pin %motion_pin"
+    //% weight=40
+    export function readMotionSensor(motion_pin: AnalogPin): boolean {
+        tempPin = parseInt(motion_pin.toString())
+        temp = pins.analogReadPin(tempPin)
+        if (temp > 800)
+            return true
+        else return false
+    }
+
     /** 
      * Read the detection result of flame sensor, return true when detect flame, otherwise return false
      * @param pin is read the flame sensor pin
@@ -273,6 +290,41 @@ namespace smarthonHome {
             return true;
         }
         else { return false; }
+    }
+
+    /**
+     * Read the distance data from the ultrasonic distance sensor, can return data in different unit.
+     * @param unit the distance unit eg: cm or inches
+     * @param trig tragger to send the ultrasonic signal
+     * @param echo tragger to receive the ultrasonic signal
+     * @param maxCmDistance is the maximum distance can be detected
+     */
+    //% blockId=smarthon_home_read_distance_sensor
+    //% block="get distance unit %unit trig %trig echo %echo"
+    //% weight=64
+    //% trig.defl=DigitalPin.P14 echo.defl=DigitalPin.P15
+    //% inlineInputMode=inline
+    export function readDistanceSensor(unit: DistanceUnit, trig: DigitalPin, echo: DigitalPin, maxCmDistance = 500): number {
+        // send pulse
+        let d = 10;
+        pins.setPull(trig, PinPullMode.PullNone);
+        for (let x = 0; x < 10; x++) {
+            pins.digitalWritePin(trig, 0);
+            control.waitMicros(2);
+            pins.digitalWritePin(trig, 1);
+            control.waitMicros(10);
+            pins.digitalWritePin(trig, 0);
+            // read pulse
+            d = pins.pulseIn(echo, PulseValue.High, maxCmDistance * 58);
+            if (d > 0)
+                break;
+        }
+
+        switch (unit) {
+            case DistanceUnit.Centimeters: return Math.round(d / 58 * 1.4);
+            case DistanceUnit.Inches: return Math.round(d / 148 * 1.4);
+            default: return d;
+        }
     }
 
     /**

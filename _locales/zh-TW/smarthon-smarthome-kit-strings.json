@@ -16,17 +16,17 @@
   "smarthonHome.ServoSpeed.Level3|block": "高",
   "smarthonHome.TempDegree.DegreeCelsius|block": "攝氏",
   "smarthonHome.TempDegree.DegreeFahrenheit|block": "華氏",
-  "smarthonHome.Turn180Servo|block": "轉動 180度舵機 到 %degree 度 接口 %pin",
-  "smarthonHome.Turn360Servo|block": "轉動 360度舵機 以 %direction 方向|速度 %speed 接口 %pin",
-  "smarthonHome.TurnMotor|block": "開啟風扇馬達至速度 %intensity 接口 %pin1",
+  "smarthonHome.turn180Servo|block": "轉動 180度舵機 到 %degree 度 接口 %pin",
+  "smarthonHome.turn360Servo|block": "轉動 360度舵機 以 %direction 方向|速度 %speed 接口 %pin",
+  "smarthonHome.turnMotor|block": "開啟風扇馬達至速度 %intensity 接口 %pin1",
   "smarthonHome.getFlame|block": "取得 火焰檢測器數值 接口 %pin",
   "smarthonHome.getLight|block": "取得 亮度傳感器數值 接口 %pin",
   "smarthonHome.getIndoorAirQualityScore|block": "取得 室内空气质素(IAQ)",
   "smarthonHome.readDht11|block": "讀取 溫濕度傳感器數值 接口 %dht11Pin|",
   "smarthonHome.readTemperatureData|block": "取得 溫度數值 |%tempDegree",
   "smarthonHome.readHumidityData|block": "取得 濕度數值",
-  "smarthonHome.readDistanceSensorHome|block": "取得 量度距離 使用單位 %unit trig接口 %trig echo接口 %echo",
-  "smarthonHome.readMotionSensorHome|block": "取得 動作傳感器數值 接口 %motion_pin",
+  "smarthonHome.readDistanceSensor|block": "取得 量度距離 使用單位 %unit trig接口 %trig echo接口 %echo",
+  "smarthonHome.readMotionSensor|block": "取得 動作傳感器數值 接口 %motion_pin",
 
 
   
