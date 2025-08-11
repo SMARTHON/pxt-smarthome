@@ -5,8 +5,6 @@
 //% weight=98 color=#ffba52 icon="\uf015" block="SmartHome"
 namespace smarthonHome {
     let lightVariable = 0;
-    let temperatureVariable = 0;
-    let humidityVariable = 0;
     let heatVariable = 0;
     let buttonVariable = 0;
     let flameVariable = 0;
