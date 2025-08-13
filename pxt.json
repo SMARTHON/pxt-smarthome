@@ -1,6 +1,6 @@
 {
     "name": "smarthon-smarthome-kit",
-    "version": "1.8.0",
+    "version": "1.8.1",
     "description": "The package for Smart Home IoT Maker Kit for micro:bit",
     "license": "MIT",
     "dependencies": {
@@ -11,7 +11,7 @@
     },
     "files": [
         "README.md",
-        "SmartHome.ts",
+        "smarthome.ts",
 		"_locales/zh-CN/smarthon-smarthome-kit-strings.json",
         "_locales/zh-TW/smarthon-smarthome-kit-strings.json"
     ],
