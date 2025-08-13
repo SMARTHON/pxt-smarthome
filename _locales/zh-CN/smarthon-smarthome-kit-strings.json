@@ -1,0 +1,37 @@
+{
+  "smarthonHome.readButton|block": "当按钮接口 %pin 被按下",
+  "smarthonHome.Dht11DataType.Humidity|block": "湿度",
+  "smarthonHome.Dht11DataType.Temperature|block": "温度",
+  "smarthonHome.DistanceUnit.Centimeters|block": "厘米",
+  "smarthonHome.DistanceUnit.Inches|block": "吋",
+  "smarthonHome.DistanceUnit.MicroSeconds|block": "微秒",
+  "smarthonHome.PressButtonList.B0|block": "P0",
+  "smarthonHome.PressButtonList.B1|block": "P1",
+  "smarthonHome.PressButtonList.B2|block": "P2",
+  "smarthonHome.ServoDirection.Clockwise|block": "顺时针",
+  "smarthonHome.ServoDirection.Anticlockwise|block": "逆时针",
+  "smarthonHome.ServoSpeed.Level0|block": "停止",
+  "smarthonHome.ServoSpeed.Level1|block": "慢",
+  "smarthonHome.ServoSpeed.Level2|block": "中等",
+  "smarthonHome.ServoSpeed.Level3|block": "高",
+  "smarthonHome.TempDegree.DegreeCelsius|block": "摄氏",
+  "smarthonHome.TempDegree.DegreeFahrenheit|block": "华氏",
+  "smarthonHome.turn180Servo|block": "转动 180度舵机 到 %degree 度 接口 %pin",
+  "smarthonHome.turn360Servo|block": "转动 360度舵机 以 %direction 方向|速度 %speed 接口 %pin",
+  "smarthonHome.turnMotor|block": "开启风扇马达至速度 %intensity 接口 %pin1",
+  "smarthonHome.getFlame|block": "取得 火焰检测器数值 接口 %pin",
+  "smarthonHome.getLight|block": "取得 亮度传感器数值 接口 %pin",
+  "smarthonHome.getIndoorAirQualityScore|block": "取得 室内空气质素(IAQ)",
+  "smarthonHome.readDht11|block": "读取 温湿度传感器数值 接口 %dht11Pin|",
+  "smarthonHome.readTemperatureData|block": "取得 温度数值 |%tempDegree",
+  "smarthonHome.readHumidityData|block": "取得 湿度数值",
+  "smarthonHome.readDistanceSensor|block": "取得 量度距离 使用单位 %unit trig接口 %trig echo接口 %echo",
+  "smarthonHome.readMotionSensor|block": "取得 动作传感器数值 接口 %motion_pin",
+
+
+  
+  "smarthonHome|block": "SmartHome",
+  "{id:category}smarthonHome": "smarthonHome",
+  "{id:group}Temperature and Humidity Sensor (DHT11)": "温湿度传感器 (DHT11)",
+  "{id:subcategory}More": "更多"
+}
