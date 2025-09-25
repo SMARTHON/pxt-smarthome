@@ -1,7 +1,7 @@
 {
     "name": "smarthon-smarthome-kit",
     "version": "1.8.2",
-    "description": "The package for Smart Home IoT Maker Kit for micro:bit",
+    "description": "The extension for Smart Home IoT Maker Kit for micro:bit",
     "license": "MIT",
     "dependencies": {
         "core": "*",
