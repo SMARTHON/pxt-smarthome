@@ -1,7 +1,7 @@
 
 # Smarthon-Smart Home IoT Maker Kit
 
-A MakeCode extension for Smarthon Smart Home IoT Maker kit and IoT:bit<br>
+A MakeCode extension for Smarthon Smart Home IoT Maker kit<br>
 
 ## About Smarthon Smart Home IoT Maker Kit
 
