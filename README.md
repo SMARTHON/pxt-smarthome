@@ -1,8 +1,7 @@
 
 # Smarthon-Smart Home IoT Maker Kit
 
-A PXT library for Smarthon Smart Home IoT Maker kit<br>
-A MakeCode extension for Smarthon IoT:bit<br>
+A MakeCode extension for Smarthon Smart Home IoT Maker kit<br>
 
 ## About Smarthon Smart Home IoT Maker Kit
 

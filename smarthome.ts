@@ -2,7 +2,7 @@
  * Sensor block
  * SmartHome expansion module for Micro:bit
  */
-//% weight=98 color=#ffba52 icon="\uf015" block="SmartHome"
+//% weight=98 color=#FFA500 icon="\uf015" block="SmartHome"
 namespace smarthonHome {
     let lightVariable = 0;
     let heatVariable = 0;
@@ -67,7 +67,7 @@ namespace smarthonHome {
      * @param pin to get the analog value from pin
      */
     //% blockId=smarthon_home_get_light
-    //% block="get light value (percentage) at pin %pin"
+    //% block="light value (percentage) at pin %pin"
     //% weight=65	
     export function getLight(pin: AnalogPin): number {
         lightVariable = Math.round(pins.map(
@@ -194,11 +194,11 @@ namespace smarthonHome {
     }
 
     /**
-     * Get the Temperature value (degree in Celsius or Fahrenheit) after queried the Temperature and Humidity sensor
+     * Get the Temperature value (tempDegree - is Celsius or Fahrenheit) after queried the Temperature and Humidity sensor
      * @param tempDegree is the number of temperature
      */
     //% blockId=smarthon_home_read_temperature
-    //% block="get temperature |%tempDegree"
+    //% block="temperature |%tempDegree"
     //% weight=79
     //% group="Temperature and Humidity Sensor (DHT11)"
     export function readTemperatureData(tempDegree: TempDegree): number {
@@ -213,7 +213,7 @@ namespace smarthonHome {
      * Get the humidity value (in percentage) after queried the Temperature and Humidity sensor
      */
     //% blockId=smarthon_home_get_humidity
-    //% block="get humidity"
+    //% block="humidity"
     //% weight=78
     //% group="Temperature and Humidity Sensor (DHT11)"
     export function readHumidityData(): number {
@@ -224,7 +224,7 @@ namespace smarthonHome {
      * Basic on the temperature and humidity to calculate the indoor air quality score, detail can refer to online documentation
      */
     //% blockId=smarthon_home_get_IndoorAirQualityScore
-    //% block="get indoor air quality score"
+    //% block="indoor air quality score"
     //% weight=77		
     //% group="Temperature and Humidity Sensor (DHT11)"
     export function getIndoorAirQualityScore(): number {
@@ -256,7 +256,7 @@ namespace smarthonHome {
      * @param motion_pin is the motion changing at the front
      */
     //% blockId=smarthon_home_read_motion_sensor
-    //% block="get motion (triggered or not) at pin %motion_pin"
+    //% block="motion (triggered or not) at pin %motion_pin"
     //% weight=40
     export function readMotionSensor(motion_pin: AnalogPin): boolean {
         tempPin = parseInt(motion_pin.toString())
@@ -271,7 +271,7 @@ namespace smarthonHome {
      * @param pin is read the flame sensor pin
      */
     //% blockId=smarthon_home_get_flame
-    //% block="get flame detection at pin %pin"
+    //% block="flame detection at pin %pin"
     //% weight=45	
     export function getFlame(pin: DigitalPin): boolean {
         flameVariable = pins.digitalReadPin(pin)
@@ -284,12 +284,12 @@ namespace smarthonHome {
     /**
      * Read the distance data from the ultrasonic distance sensor, can return data in different unit.
      * @param unit the distance unit eg: cm or inches
-     * @param trig tragger to send the ultrasonic signal
-     * @param echo tragger to receive the ultrasonic signal
+     * @param trig trigger to send the ultrasonic signal
+     * @param echo trigger to receive the ultrasonic signal
      * @param maxCmDistance is the maximum distance can be detected
      */
     //% blockId=smarthon_home_read_distance_sensor
-    //% block="get distance unit %unit trig %trig echo %echo"
+    //% block="distance unit %unit trig %trig echo %echo"
     //% weight=64
     //% trig.defl=DigitalPin.P14 echo.defl=DigitalPin.P15
     //% inlineInputMode=inline
@@ -331,11 +331,11 @@ namespace smarthonHome {
     }
 
     /**
-    * Control the 180 degree servo to specific angle
+    * Control the 180 degrees servo to specific angle
     * @param intensity is the servo turning to the angle
     */
     //% blockId=smarthon_home_180_servo
-    //% block="turn 180° servo to %degree degree at %pin"
+    //% block="turn 180° servo to %degree degrees at %pin"
     //% intensity.min=0 intensity.max=180
     //% weight=43
     //%subcategory=More	
@@ -344,7 +344,7 @@ namespace smarthonHome {
     }
 
     /**
-     * Control the 360 degree servo to rotate with direction and Speed
+     * Control the 360 degrees servo to rotate with direction and Speed
      * @param direction clockwise or anti-clockwise
      * @param speed how fast the servo turning
      * @param pin is control the servo pin
