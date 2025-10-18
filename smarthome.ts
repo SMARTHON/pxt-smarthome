@@ -2,7 +2,7 @@
  * Sensor block
  * SmartHome expansion module for Micro:bit
  */
-//% weight=98 color=#ffba52 icon="\uf015" block="SmartHome"
+//% weight=98 color=#FFA500 icon="\uf015" block="SmartHome"
 namespace smarthonHome {
     let lightVariable = 0;
     let heatVariable = 0;
