@@ -67,7 +67,7 @@ namespace smarthonHome {
      * @param pin to get the analog value from pin
      */
     //% blockId=smarthon_home_get_light
-    //% block="Light value (percentage) at pin %pin"
+    //% block="light value (percentage) at pin %pin"
     //% weight=65	
     export function getLight(pin: AnalogPin): number {
         lightVariable = Math.round(pins.map(
@@ -198,7 +198,7 @@ namespace smarthonHome {
      * @param tempDegree is the number of temperature
      */
     //% blockId=smarthon_home_read_temperature
-    //% block="Temperature |%tempDegree"
+    //% block="temperature |%tempDegree"
     //% weight=79
     //% group="Temperature and Humidity Sensor (DHT11)"
     export function readTemperatureData(tempDegree: TempDegree): number {
@@ -213,7 +213,7 @@ namespace smarthonHome {
      * Get the humidity value (in percentage) after queried the Temperature and Humidity sensor
      */
     //% blockId=smarthon_home_get_humidity
-    //% block="Humidity"
+    //% block="humidity"
     //% weight=78
     //% group="Temperature and Humidity Sensor (DHT11)"
     export function readHumidityData(): number {
@@ -224,7 +224,7 @@ namespace smarthonHome {
      * Basic on the temperature and humidity to calculate the indoor air quality score, detail can refer to online documentation
      */
     //% blockId=smarthon_home_get_IndoorAirQualityScore
-    //% block="Indoor air quality score"
+    //% block="indoor air quality score"
     //% weight=77		
     //% group="Temperature and Humidity Sensor (DHT11)"
     export function getIndoorAirQualityScore(): number {
@@ -256,7 +256,7 @@ namespace smarthonHome {
      * @param motion_pin is the motion changing at the front
      */
     //% blockId=smarthon_home_read_motion_sensor
-    //% block="Motion (triggered or not) at pin %motion_pin"
+    //% block="motion (triggered or not) at pin %motion_pin"
     //% weight=40
     export function readMotionSensor(motion_pin: AnalogPin): boolean {
         tempPin = parseInt(motion_pin.toString())
@@ -271,7 +271,7 @@ namespace smarthonHome {
      * @param pin is read the flame sensor pin
      */
     //% blockId=smarthon_home_get_flame
-    //% block="Flame detection at pin %pin"
+    //% block="flame detection at pin %pin"
     //% weight=45	
     export function getFlame(pin: DigitalPin): boolean {
         flameVariable = pins.digitalReadPin(pin)
@@ -289,7 +289,7 @@ namespace smarthonHome {
      * @param maxCmDistance is the maximum distance can be detected
      */
     //% blockId=smarthon_home_read_distance_sensor
-    //% block="Distance unit %unit trig %trig echo %echo"
+    //% block="distance unit %unit trig %trig echo %echo"
     //% weight=64
     //% trig.defl=DigitalPin.P14 echo.defl=DigitalPin.P15
     //% inlineInputMode=inline
