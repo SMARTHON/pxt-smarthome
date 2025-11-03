@@ -1,11 +1,11 @@
 {
     "name": "smarthon-smarthome-kit",
-    "version": "1.8.2",
+    "version": "1.8.4",
     "description": "The extension for Smart Home IoT Maker Kit for micro:bit",
     "license": "MIT",
     "dependencies": {
         "core": "*",
-		"smarthon-iotbit": "github:SMARTHON/pxt-iot-bit",
+		"smarthon-iotbit": "github:SMARTHON/pxt-iot-bit#0.9.3",
 		"neopixel": "github:microsoft/pxt-neopixel#v0.7.3"
 				
     },
