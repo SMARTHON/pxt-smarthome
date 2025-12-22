@@ -30,8 +30,20 @@
 - Fix the function wording and Format.
 
 ## v1.6.11 Jan 31, 2022
-init commit
+- change PressButton to specific pin, change flame and motion sensor function to digital Pin, dht11 and v1 version update
+- renew the DHT11 read temperature and humidity function, add IAQ function
 
-# Development CHANGELOG
+## v1.6.9 Dec 21, 2021
+- change name from smarthouse to smartHome
+- merge get temperature and humidity function
+- improve DHT11 stable issue
 
+## v1.6.6 Dec 2, 2021
+- remove town gas, add 0.5s to dht11, change motor to 3 pin
+- fix DHT11 crash issue
+- fix the light reading to percentage and add the iot:bit extension
+- remove the useless function and add the button function
+- remove the colorful LED function
+
+## a Development CHANGELOG
 
